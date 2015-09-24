@@ -196,28 +196,39 @@ addpath('./TGP')        % Twin Gaussian Process (TGP) [Liefeng Bo and Cristian S
 
 clear;clc;close all;
 
-%% Data
+%% Data 1:
 N     = 1000;
-X     = [sin(1:N)', cos(1:N)', tanh(1:N)'] + 0.3*randn(N,3);
+X     = [sin(1:N)', cos(1:N)', tanh(1:N)'] + 0.2*randn(N,3);
 Y     = sin(1:N)';
 VARIABLES = {'SIN', 'COS', 'TANH'};
-% 
-% 
+
+%% Data 2:
 % load motorcycle.mat
 % Y = y;
 
-%% Split training-testing data
-rate = 0.1; %[0.05 0.1 0.2 0.3 0.4 0.5 0.6]
-% Fix seed random generator (important: disable when doing the 100 realizations loop!)
-rand('seed',12345);
-randn('seed',12345);
-[n d] = size(X);                 % samples x bands
-r = randperm(n);                 % random index
-ntrain = round(rate*n);          % #training samples
-Xtrain = X(r(1:ntrain),:);       % training set
-Ytrain = Y(r(1:ntrain),:);       % observed training variable
-Xtest  = X(r(ntrain+1:end),:);   % test set
-Ytest  = Y(r(ntrain+1:end),:);   % observed test variable
+%% Data 3:
+% load cloroSeaBAM.mat
+% Xtrain = SamplesT; Ytrain = [LabelsT]; Xtest = SamplesV; Ytest = LabelsV;
+
+%% Data 4:
+data = load('J_SPARC_one_day.txt');
+Y  = data(2,2:end)';
+X  = data(5:end,2:end)';
+
+if 1
+    %% Split training-testing data
+    rate = 0.5; %[0.05 0.1 0.2 0.3 0.4 0.5 0.6]
+    % Fix seed random generator (important: disable when doing the 100 realizations loop!)
+    rand('seed',12345);
+    randn('seed',12345);
+    [n d] = size(X);                 % samples x bands
+    r = randperm(n);                 % random index
+    ntrain = round(rate*n);          % #training samples
+    Xtrain = X(r(1:ntrain),:);       % training set
+    Ytrain = Y(r(1:ntrain),:);       % observed training variable
+    Xtest  = X(r(ntrain+1:end),:);   % test set
+    Ytest  = Y(r(ntrain+1:end),:);   % observed test variable
+end
 
 %% Remove the mean of Y for training only
 my      = mean(Ytrain);
@@ -225,13 +236,15 @@ Ytrain  = Ytrain - my;
 
 %% SELECT METHODS FOR COMPARISON
 
-% METHODS = {'RLR' 'LASSO' 'ENET' 'LWP' 'KNNR'} % LINEAR
+% METHODS = {'RLR' 'LASSO' 'ENET'} % LINEAR
+% METHODS = {'LWP' 'ARES'} % SPLINES
+% METHODS = {'KNNR' 'WKNNR'} % NEIGHBORS
 %METHODS = {'TREE' 'BAGTREE' 'BOOST' 'RF1' 'RF2'}   % TREES
 % METHODS = {'NN' 'ELM'}  % NEURAL NETS
 % METHODS = {'SVR' 'KRR' 'RVM' 'KSNR' 'SKRRrbf' 'SKRRlin' 'RKS'}   % KERNELS
 % METHODS = {'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'}  % GPs  
 
-METHODS = {'RLR' 'LASSO' 'ENET' 'LWP' 'KNNR' , ...
+METHODS = {'RLR' 'LASSO' 'ENET' 'LWP'  'ARES' 'KNNR' 'WKNNR', ...  % 
     'TREE' 'BAGTREE' 'BOOST' 'RF1' 'RF2', ...
     'NN' 'ELM', 'SVR' 'KRR' 'RVM' 'KSNR' 'SKRRrbf' 'SKRRlin' 'RKS', ...
     'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'} 
@@ -249,18 +262,16 @@ for m=1:numModels
     CPUTIMES(m) = cputime-t;
 end
 
-
 %% NUMERICAL COMPARISON
 % clc
 fprintf('----------------------------------------------------------------------------------- \n')
-fprintf('METHOD\t & ME\t & RMSE\t & MAE\t & R \\\\ \n')
+fprintf('#\t METHOD\t & ME\t & RMSE\t & MAE\t & R \\\\ \n')
 fprintf('----------------------------------------------------------------------------------- \n')
 for m=1:numModels
-    fprintf([METHODS{m} '\t & %3.3f\t & %3.3f\t & %3.3f\t & %3.3f \\\\ \n'],abs(results(m).ME),results(m).RMSE,results(m).MAE,results(m).R)
+    fprintf([num2str(m) '\t' METHODS{m} '\t & %3.3f\t & %3.3f\t & %3.3f\t & %3.3f \\\\ \n'],abs(results(m).ME),results(m).RMSE,results(m).MAE,results(m).R)
 end
 fprintf('----------------------------------------------------------------------------------- \n')
 
-CPUTIMES
 [val idx] = min([results.RMSE]);
 disp(['The best method in RMSE terms is: ' METHODS{idx}])
 [val idx] = min(abs([results.ME]));
@@ -268,8 +279,8 @@ disp(['The best method in ME terms is: ' METHODS{idx}])
 [val idx] = max([results.R]);
 disp(['The best method in correlation terms is: ' METHODS{idx}])
 
-break
 
+break
 
 %% THE ERROR BOXPLOTS
 figure,
@@ -288,20 +299,13 @@ anova1(abs(ERRORS))
 %% THE CPU TIMES
 
 figure,
-barh([tempsLR tempsLASSO tempsENET tempsTREE tempsBAGTREE tempsBOOST tempsNN tempsELM tempsSVR tempsKRR tempsRVM tempsGP tempsVHGP])
+bar(CPUTIMES)
 xlabel('')
-set(gca,'YTickLabel',METHODS);
+set(gca,'XTickLabel',METHODS);
 xlabel('CPU Time [s]')
 grid
 
 %% SCATTER PLOTS OF THE BEST METHOD IN RMSE
-
-[val idx] = min([resultsRLR.RMSE, resultsLASSO.RMSE resultsENET.RMSE ...
-    resultsTREE.RMSE  resultsBAGTREE.RMSE  resultsBOOST.RMSE  resultsNN.RMSE ...
-    resultsELM.RMSE  resultsSVR.RMSE  resultsKRR.RMSE  resultsRVM.RMSE  resultsGP.RMSE  resultsVHGP.RMSE]);
-
-fprintf('The best method in RMSE terms is:')
-METHODS{idx}
 
 figure,
 plot(Ytest,Ypred(:,idx),'k.'),
@@ -338,6 +342,8 @@ ylabel('RMSE')
 grid
 axis tight
 legend(METHODS)
+
+break
 
 %% RANKING FEATURES with DIFFERENT METHODS
 
