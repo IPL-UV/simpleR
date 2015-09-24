@@ -33,8 +33,8 @@ nvartosample = 'all'; % if not set, 1/3 of the variables for regression
 %% RF train
 model = cell(1,size(y,2));
 for i = 1:length(model)
-    fprintf('  RF on output var %d\n', i);
-    model{i} = TreeBagger(100, x, y(:,i), 'method', 'r', ...
+%    fprintf('  RF on output var %d\n', i);
+    model{i} = TreeBagger(200, x, y(:,i), 'method', 'r', ...
         'oobvarimp', 'on', 'minleaf', meanleaf, 'nvartosample', nvartosample);
 end
 

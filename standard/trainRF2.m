@@ -17,8 +17,8 @@ t = RegressionTree.template('MinLeaf',1); % MinLeaf makes the difference!
 
 model = cell(1,size(y,2));
 for i = 1:length(model)
-    fprintf('  RF on output var %d\n', i);
-    model{i} = fitensemble(x, y(:,i), 'LSBoost', 100, t);
+%    fprintf('  RF on output var %d\n', i);
+    model{i} = fitensemble(x, y(:,i), 'LSBoost', 200, t);
     % Train with bagging instead of boosting. It obtained worse results in my tests.
     %model{i} = fitensemble(x, y(:,i), 'Bag', 100, t, 'type', 'r');
 end
