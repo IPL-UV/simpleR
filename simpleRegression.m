@@ -192,6 +192,7 @@ addpath('./ARESLab')    % ARESLab -- Adaptive Regression Splines toolbox for Mat
 addpath('./LWP')        % Locally-Weighted Polynomials, Version 1.3, by Gints Jekabsons
 addpath('./WGP')        % Warped GPs
 addpath('./ssgp')       % Sparse Spectrum Gaussian Process (SSGP)  [Lázaro-Gredilla, 2008]
+addpath('./TGP')        % Twin Gaussian Process (SSGP) [Liefeng Bo and Cristian Sminchisescu]  http://www.maths.lth.se/matematiklth/personal/sminchis/code/TGP.html
 
 clear;clc;close all;
 
@@ -224,7 +225,7 @@ Ytrain  = Ytrain - my;
 %METHODS = {'TREE' 'BAGTREE' 'BOOST' 'RF1' 'RF2'}   % TREES
 % METHODS = {'NN' 'ELM'}  % NEURAL NETS
 % METHODS = {'SVR' 'KRR' 'RVM' 'KSNR' 'SKRRrbf' 'SKRRlin' 'RKS'}   % KERNELS
-% METHODS = {'GPR' 'VHGPR' 'WGPR' 'SSGPR'}  % GPs
+METHODS = { 'TGP'}  % GPs   'GPR' 'VHGPR' 'WGPR' 'SSGPR'
 
 %% TRAIN ALL MODELS
 numModels = numel(METHODS);
