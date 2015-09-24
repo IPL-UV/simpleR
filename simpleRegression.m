@@ -201,6 +201,10 @@ N     = 1000;
 X     = [sin(1:N)', cos(1:N)', tanh(1:N)'] + 0.3*randn(N,3);
 Y     = sin(1:N)';
 VARIABLES = {'SIN', 'COS', 'TANH'};
+% 
+% 
+% load motorcycle.mat
+% Y = y;
 
 %% Split training-testing data
 rate = 0.1; %[0.05 0.1 0.2 0.3 0.4 0.5 0.6]
@@ -225,7 +229,12 @@ Ytrain  = Ytrain - my;
 %METHODS = {'TREE' 'BAGTREE' 'BOOST' 'RF1' 'RF2'}   % TREES
 % METHODS = {'NN' 'ELM'}  % NEURAL NETS
 % METHODS = {'SVR' 'KRR' 'RVM' 'KSNR' 'SKRRrbf' 'SKRRlin' 'RKS'}   % KERNELS
-METHODS = { 'MGP'}  % GPs   'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'
+% METHODS = {'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'}  % GPs  
+
+METHODS = {'RLR' 'LASSO' 'ENET' 'LWP' 'KNNR' , ...
+    'TREE' 'BAGTREE' 'BOOST' 'RF1' 'RF2', ...
+    'NN' 'ELM', 'SVR' 'KRR' 'RVM' 'KSNR' 'SKRRrbf' 'SKRRlin' 'RKS', ...
+    'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'} 
 
 %% TRAIN ALL MODELS
 numModels = numel(METHODS);
