@@ -15,9 +15,10 @@ res = Inf;
 for k=K
     [IDX,D] = knnsearch(Xtrain,Xtest,'K',k);
     Ypred   = mean(Ytrain(IDX),2);
+%     Ypred = sum(Ytrain(IDX) .* D(IDX),2) ./ sum(D(IDX),2);  % Check!
     res(k) = norm(Ytest-Ypred,'fro');
 end
-figure,semilogx(K,res,'ko-'), grid
+% figure,plot(K,res,'ko-'), grid
 
 [val idx] = min(res);
 model.k = idx;
