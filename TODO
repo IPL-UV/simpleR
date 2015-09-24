@@ -7,6 +7,7 @@ COMBINATION OF MODELS
 
 LARGESCALE 
   - include the option of divide-and-conquer strategy
+  - modify the kernel test functions to run in batches...
 
 ANALYSIS OF RESULTS
   - Improve assessment.m with other specific measures for regression (nMSE, loglik, Average Posterior Predictive KL Divergence)
