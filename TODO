@@ -1,15 +1,33 @@
+CROSSVAL
+  - cross validate the number of trees in RF and bag and boost!
+  - cross validate all methods the same way? 
 
-%   - cross validate the number of trees in RF and bag and boost!
-%   - cross validate all methods the same way? 
-%   - Multioutput models?
-%   - Functions for model analysis: tress, rf feature ranking, GP ARD and SA, and for all: permutation! 
-%   - Warnings on expected memory, cpu cost, before training
-%   - Warnings on illposing
-%   - Ensemble methods?
-%   - Improve assessment.m with other specific measures for regression (nMSE, loglik)
-%   - Control verbosity
-%   - confidence intervals? 
-%   - compute cputime and memory for a complete comparison
-%   - 1D problems do not work!
-%   - Cleanup folders, remove duplicated functions, remove unused functions ---> check dependencies
-%
+COMBINATION OF MODELS
+  - Ensemble methods
+
+LARGESCALE 
+  - include the option of divide-and-conquer strategy
+
+ANALYSIS OF RESULTS
+  - Improve assessment.m with other specific measures for regression (nMSE, loglik, Average Posterior Predictive KL Divergence)
+
+FEATURE RANKING 
+  - trees analysis
+  - rf feature ranking
+  - GPs: ARD and SA
+  - All: permutation! 
+
+CONFIDENCE INTERVALS  
+  - confidence intervals? 
+
+WARNINGS
+  - if a multioutput problem is detected, ask and run MO models or one by one SO model
+  - Warnings on expected memory, cpu cost, before training
+  - Warnings on illposing, run PCA before that?
+
+MISC
+   - Control verbosity
+   - compute cputime and memory for a complete comparison
+   - 1D problems do not work!
+   - Cleanup folders, remove duplicated functions, remove unused functions ---> check dependencies
+
