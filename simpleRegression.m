@@ -211,13 +211,13 @@ VARIABLES = {'SIN', 'COS', 'TANH'};
 % Xtrain = SamplesT; Ytrain = [LabelsT]; Xtest = SamplesV; Ytest = LabelsV;
 
 %% Data 4:
-data = load('J_SPARC_one_day.txt');
-Y  = data(2,2:end)';
-X  = data(5:end,2:end)';
+% data = load('J_SPARC_one_day.txt');
+% Y  = data(2,2:end)';
+% X  = data(5:end,2:end)';
 
 if 1
     %% Split training-testing data
-    rate = 0.5; %[0.05 0.1 0.2 0.3 0.4 0.5 0.6]
+    rate = 0.1; %[0.05 0.1 0.2 0.3 0.4 0.5 0.6]
     % Fix seed random generator (important: disable when doing the 100 realizations loop!)
     rand('seed',12345);
     randn('seed',12345);
