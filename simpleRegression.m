@@ -200,7 +200,7 @@ addpath('./TGP')        % Twin Gaussian Process (TGP) [Liefeng Bo and Cristian S
 clear;clc;close all;
 
 %% Data 1:
-N     = 10000;
+N     = 100000;
 X     = [sin(1:N)', cos(1:N)', tanh(1:N)'] + 0.2*randn(N,3);
 Y     = sin(1:N)';
 VARIABLES = {'SIN', 'COS', 'TANH'};
@@ -220,7 +220,7 @@ VARIABLES = {'SIN', 'COS', 'TANH'};
 
 if 1
     %% Split training-testing data
-    rate = 0.3; %[0.05 0.1 0.2 0.3 0.4 0.5 0.6]
+    rate = 0.2; %[0.05 0.1 0.2 0.3 0.4 0.5 0.6]
     % Fix seed random generator (important: disable when doing the 100 realizations loop!)
     rand('seed',12345);
     randn('seed',12345);
@@ -238,15 +238,14 @@ my      = mean(Ytrain);
 Ytrain  = Ytrain - my;
 
 %% SELECT METHODS FOR COMPARISON
-METHODS = {'KRR'} 
+% METHODS = {'KRR'} 
 % METHODS = {'RLR' 'LASSO' 'ENET'} % LINEAR
 % METHODS = {'LWP' 'ARES'} % SPLINES
 % METHODS = {'KNNR' 'WKNNR'} % NEIGHBORS
 %METHODS = {'TREE' 'BAGTREE' 'BOOST' 'RF1' 'RF2'}   % TREES
 % METHODS = {'NN' 'ELM'}  % NEURAL NETS
 % METHODS = {'SVR' 'KRR' 'RVM' 'KSNR' 'SKRRrbf' 'SKRRlin' 'RKS'}   % KERNELS
-% METHODS = {'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'}  % GPs  
-% METHODS = {'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'}  % GPs  
+METHODS = {'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'}  % GPs  
 
 %%%% ALL!
 % METHODS = {'RLR' 'LASSO' 'ENET' 'LWP'  'ARES' 'KNNR' 'WKNNR', ...  % 
@@ -257,8 +256,8 @@ METHODS = {'KRR'}
 %% TRAIN ALL MODELS
 numModels = numel(METHODS);
 
+% One model (very costly for kernel methods!)
 for m=1:numModels
-    % One model
     fprintf(['Training ' METHODS{m} '... \n'])
     t=cputime;
     eval(['model = train' METHODS{m} '(Xtrain,Ytrain);']); % Train the model
@@ -266,17 +265,18 @@ for m=1:numModels
     Ypred(:,m)     = Yp + my;
     results(m)     = assessment(Ypred(:,m),Ytest,'regress');   
     CPUTIMES(m) = cputime-t;
-
-    % Fast training
-    fprintf(['Fast Training ' METHODS{m} '... \n'])
-    t=cputime;
-    eval(['model2 = fastTrain(''' METHODS{m} ''',Xtrain,Ytrain);']); % fast Train the model
-    eval(['Yp = fastTest(''' METHODS{m} ''',model2,Xtest);']);       % fast Test the model
-    Ypred(:,m)     = Yp + my;
-    results2(m)     = assessment(Ypred(:,m),Ytest,'regress');   
-    CPUTIMES2(m) = cputime-t;
-
 end
+
+% % Fast training (divide and conquer strategy, nice for kernel machines)
+% for m=1:numModels
+%     fprintf(['Fast Training ' METHODS{m} '... \n'])
+%     t=cputime;
+%     eval(['model2 = fastTrain(''' METHODS{m} ''',Xtrain,Ytrain);']); % fast Train the model
+%     eval(['Yp = fastTest(''' METHODS{m} ''',model2,Xtest);']);       % fast Test the model
+%     Ypred(:,m)     = Yp + my;
+%     results2(m)     = assessment(Ypred(:,m),Ytest,'regress');   
+%     CPUTIMES2(m) = cputime-t;
+% end
 
 %% NUMERICAL COMPARISON
 % clc
@@ -287,25 +287,20 @@ for m=1:numModels
     fprintf([num2str(m) '\t' METHODS{m} '\t & %3.3f\t & %3.3f\t & %3.3f\t & %3.3f \\\\ \n'],abs(results(m).ME),results(m).RMSE,results(m).MAE,results(m).R)
 end
 fprintf('----------------------------------------------------------------------------------- \n')
-% 
+
 % [val idx] = min([results.RMSE]);
 % disp(['The best method in RMSE terms is: ' METHODS{idx}])
 % [val idx] = min(abs([results.ME]));
 % disp(['The best method in ME terms is: ' METHODS{idx}])
 % [val idx] = max([results.R]);
 % disp(['The best method in correlation terms is: ' METHODS{idx}])
-% 
-% 
-% figure,
-% barh([CPUTIMES;CPUTIMES2]')
-% set(gca,'Ytick',1:length(METHODS),'YTickLabel',METHODS);
-% xlabel('CPU Time [s]')
-% ylabel('Methods')
-% legend('Single model','Divide-and-conquer')
-% grid
 
-[CPUTIMES;CPUTIMES2]
-[results.RMSE, results2.RMSE]
+figure,
+barh([CPUTIMES])
+set(gca,'Ytick',1:length(METHODS),'YTickLabel',METHODS);
+xlabel('CPU Time [s]')
+ylabel('Methods')
+grid
 
 break
 
