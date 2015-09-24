@@ -179,7 +179,7 @@
 clear;clc;close all;
 
 fontname = 'Bookman';
-fontsize = 14;
+fontsize = 20;
 fontunits = 'points';
 set(0,'DefaultAxesFontName',fontname,'DefaultAxesFontSize',fontsize,'DefaultAxesFontUnits',fontunits,...
     'DefaultTextFontName',fontname,'DefaultTextFontSize',fontsize,'DefaultTextFontUnits',fontunits,...
@@ -200,7 +200,7 @@ addpath('./TGP')        % Twin Gaussian Process (TGP) [Liefeng Bo and Cristian S
 clear;clc;close all;
 
 %% Data 1:
-N     = 1000;
+N     = 100000;
 X     = [sin(1:N)', cos(1:N)', tanh(1:N)'] + 0.2*randn(N,3);
 Y     = sin(1:N)';
 VARIABLES = {'SIN', 'COS', 'TANH'};
@@ -220,7 +220,7 @@ VARIABLES = {'SIN', 'COS', 'TANH'};
 
 if 1
     %% Split training-testing data
-    rate = 0.1; %[0.05 0.1 0.2 0.3 0.4 0.5 0.6]
+    rate = 0.7; %[0.05 0.1 0.2 0.3 0.4 0.5 0.6]
     % Fix seed random generator (important: disable when doing the 100 realizations loop!)
     rand('seed',12345);
     randn('seed',12345);
@@ -239,7 +239,7 @@ Ytrain  = Ytrain - my;
 
 %% SELECT METHODS FOR COMPARISON
 
-% METHODS = {'RLR' 'LASSO' 'ENET'} % LINEAR
+METHODS = {'RLR' 'LASSO' 'ENET'} % LINEAR
 % METHODS = {'LWP' 'ARES'} % SPLINES
 % METHODS = {'KNNR' 'WKNNR'} % NEIGHBORS
 %METHODS = {'TREE' 'BAGTREE' 'BOOST' 'RF1' 'RF2'}   % TREES
@@ -249,15 +249,16 @@ Ytrain  = Ytrain - my;
 % METHODS = {'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'}  % GPs  
 
 %%%% ALL!
-METHODS = {'RLR' 'LASSO' 'ENET' 'LWP'  'ARES' 'KNNR' 'WKNNR', ...  % 
-    'TREE' 'BAGTREE' 'BOOST' 'RF1' 'RF2', ...
-    'NN' 'ELM', 'SVR' 'KRR' 'RVM' 'KSNR' 'SKRRrbf' 'SKRRlin' 'RKS', ...
-    'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'} 
+% METHODS = {'RLR' 'LASSO' 'ENET' 'LWP'  'ARES' 'KNNR' 'WKNNR', ...  % 
+%     'TREE' 'BAGTREE' 'BOOST' 'RF1' 'RF2', ...
+%     'NN' 'ELM', 'SVR' 'KRR' 'RVM' 'KSNR' 'SKRRrbf' 'SKRRlin' 'RKS', ...
+%     'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'} 
 
 %% TRAIN ALL MODELS
 numModels = numel(METHODS);
 
 for m=1:numModels
+    % One model
     fprintf(['Training ' METHODS{m} '... \n'])
     t=cputime;
     eval(['model = train' METHODS{m} '(Xtrain,Ytrain);']); % Train the model
@@ -265,6 +266,16 @@ for m=1:numModels
     Ypred(:,m)     = Yp + my;
     results(m)     = assessment(Ypred(:,m),Ytest,'regress');   
     CPUTIMES(m) = cputime-t;
+
+    % Fast training
+    fprintf(['Fast Training ' METHODS{m} '... \n'])
+    t=cputime;
+    eval(['model2 = fastTrain(''' METHODS{m} ''',Xtrain,Ytrain);']); % fast Train the model
+    eval(['Yp = fastTest(''' METHODS{m} ''',model2,Xtest);']);       % fast Test the model
+    Ypred(:,m)     = Yp + my;
+    results2(m)     = assessment(Ypred(:,m),Ytest,'regress');   
+    CPUTIMES2(m) = cputime-t;
+
 end
 
 %% NUMERICAL COMPARISON
@@ -285,6 +296,16 @@ disp(['The best method in ME terms is: ' METHODS{idx}])
 disp(['The best method in correlation terms is: ' METHODS{idx}])
 
 
+figure,
+barh([CPUTIMES;CPUTIMES2]')
+set(gca,'Ytick',1:length(METHODS),'YTickLabel',METHODS);
+xlabel('CPU Time [s]')
+ylabel('Methods')
+legend('Single model','Divide-and-conquer')
+grid
+
+
+
 break
 
 %% THE ERROR BOXPLOTS
@@ -303,12 +324,6 @@ anova1(abs(ERRORS))
 
 %% THE CPU TIMES
 
-figure,
-bar(CPUTIMES)
-xlabel('')
-set(gca,'XTickLabel',METHODS);
-xlabel('CPU Time [s]')
-grid
 
 %% SCATTER PLOTS OF THE BEST METHOD IN RMSE
 
