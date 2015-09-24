@@ -38,6 +38,6 @@
 %    * Gaussian Process Regression (GPR)
 %    * Variational Heteroscedastic Gaussian Process Regression (VHGPR)
 %    * Warped Gaussian Processes (WGPR)
-%  ---  * Sparse Spectrum Gaussian Process Regression (SSGPR)
+%    * Sparse Spectrum Gaussian Process Regression (SSGPR)
 %  ---  * Twin Gaussian Processes (TGP)
 

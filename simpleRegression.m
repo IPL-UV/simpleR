@@ -224,7 +224,7 @@ Ytrain  = Ytrain - my;
 %METHODS = {'TREE' 'BAGTREE' 'BOOST' 'RF1' 'RF2'}   % TREES
 % METHODS = {'NN' 'ELM'}  % NEURAL NETS
 % METHODS = {'SVR' 'KRR' 'RVM' 'KSNR' 'SKRRrbf' 'SKRRlin' 'RKS'}   % KERNELS
-METHODS = {'GPR' 'VHGPR' 'WGPR' 'SSGPR'}  % GPs
+% METHODS = {'GPR' 'VHGPR' 'WGPR' 'SSGPR'}  % GPs
 
 %% TRAIN ALL MODELS
 numModels = numel(METHODS);
