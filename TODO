@@ -12,6 +12,6 @@
 %   - Control verbosity
 %   - confidence intervals? 
 %   - compute cputime and memory for a complete comparison
-%
-%
+%   - 1D problems do not work!
+%   - Cleanup folders, remove duplicated functions, remove unused functions
 %
