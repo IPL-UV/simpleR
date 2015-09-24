@@ -1,0 +1,271 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0055)http://www.tsc.uc3m.es/~miguel/advancedtutorialssgp.php -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"></head><body>
+<!--Include Header--> 
+<!-- BEGIN Header -->
+
+
+
+<meta name="google-site-verification" content="_yiTjhbtz3hE34lmIVaRhekKow5x7LHdKlkvw9uFjFk"> 
+
+<title>Miguel Lazaro-Gredilla Homepage</title>
+<!-- 
+<meta name="description" content="miguel lazaro homepage" />
+<meta name="keywords" content="machine learning Bayesian inference large scale regression neural networks" />
+-->
+<!-- CUED header: cued-h.html -->
+
+<link rel="stylesheet" type="text/css" href="./Miguel Lazaro-Gredilla Homepage_advanced_files/camstyle.css">
+
+<script type="text/javascript" async="" src="./Miguel Lazaro-Gredilla Homepage_advanced_files/ga.js"></script><script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-16994960-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+<!-- end CUED header -->
+
+
+<!-- include navigation table  -->
+<hr width="100%">
+<table cellpadding="0" cellspacing="0">
+<tbody><tr align="left">
+<td width="14%"><a href="http://www.tsc.uc3m.es/~miguel/index.php"><strong>Home</strong></a></td>
+<td width="10%"><a href="http://www.tsc.uc3m.es/~miguel/cv.php"><strong>CV</strong></a></td>
+<td width="20%"><a href="http://www.tsc.uc3m.es/~miguel/publications.php"><strong>Publications</strong></a></td>
+<td width="20%"><a href="http://www.tsc.uc3m.es/~miguel/downloads.php"><strong>Downloads</strong></a></td>
+<td width="7%"><a href="http://www.tsc.uc3m.es/~miguel/MLG"><strong>MLG</strong></a></td>
+</tr>
+</tbody></table>
+<hr width="100%">
+
+ <!-- END Header -->
+
+
+
+<!--BEGIN Contents -->
+<!-- START EDITING HERE -->
+<h1>Advanced usage of the SSGP code</h1>
+
+
+It is recommended that you first read the <a href="http://www.tsc.uc3m.es/~miguel/simpletutorialssgp.php">simple
+usage tutorial</a><a>. Refer to the paper for details of the algorithm.<br>
+
+<h2>The files</h2>
+
+Once you have downloaded and unzipped the code, you should have five files:<br>
+
+<ol>
+<li> <samp>ssgpr_ui.m</samp> - Main function you should be calling. It handles the initialization of hyperparameters as described in the paper.</li>
+<li> <samp>ssgprfixed_ui.m</samp> - Same for fixed spectral points.</li>
+<li> <samp>ssgpr.m</samp> - Code for SSGP regression. It provides training Negative Log Marginal Likelihood (NLML), derivatives with respect to the hyperparameters and predictive means and variances for test data.</li>
+<li> <samp>ssgprfixed.m</samp> - Same for fixed spectral points.</li>
+<li> <samp>minimize.m</samp> - Generic multivariate function optimization (written by Carl E. Rasmussen).</li>
+</ol>
+
+<h2>Using <samp>ssgprfixed_ui.m</samp> to perform regression</h2>
+
+<h3>Syntax</h3>
+<p><samp>[NMSE, mu, S2, NMLP, loghyper, convergence] = ssgprfixed_ui(x_tr, y_tr, x_tst, y_tst, m, iteropt, loghyper)</samp></p>
+
+
+<ul>
+<li>The first five parameters are described in the simple usage tutorial.</li>
+<li><p><samp>iteropt</samp> is used to specify the number of optimization iterations. 
+When positive, it is the maximum number of line searches, when negative,
+its absolute value is the maximum number of function evaluations.
+See <samp>minimize.m</samp> help for details.</p>
+
+<p>The default value for iteropt is <samp>-1000</samp>. This might be unnecessarily high for
+most problems, but ensures proper convergence. Set <samp>iteropt</samp> to zero to avoid optimization and obtain results with the
+initial hyperparameters.
+
+</p><p>The output <samp>convergence</samp> is a vector providing the values of the objective 
+function at each step of the optimization. Plotting this output can help you 
+assess whether convergence is being reached.</p>
+
+
+</li>
+<li> <p><samp>loghyper</samp> is used to specify the initial hyperparameters. It is a column
+vector. The hyperparameters needed to completely define the model are the <samp>D</samp>
+lengthscales, the signal power, the noise power and the <samp>m</samp> spectral points
+(being each of them a vector of <samp>D</samp> real values; one for each scalar frequency
+corresponding to each dimension).</p>
+
+<p>For maximum flexibility, two options are considered:
+    </p><ol>
+    <li>
+    You can provide a <samp>D+2</samp> long column vector with
+       <ul>
+       <li>The log of the <samp>D</samp> lengthscales.</li>
+       <li>The log of the square root of the signal power.</li>
+       <li>The log of the square root of the noise power.</li>
+       </ul>
+    In this case the spectral points are selected randomly, from the distribution
+    that corresponds to a squared exponential covariance function (which is also
+    a squared exponential).
+    </li>
+    <li> You can provide a <samp>D+2+mxD</samp> long column vector, containing all of
+    the above, and additionally all the spectral points (first the first dimension
+    of all spectral points, in order, then the second dimension of all spectral
+    points in the same order, and so on).
+     </li>
+    </ol>
+<p></p>
+
+<p> Note that the second option allows you to use covariance functions other than
+the default squared exponential.</p>
+
+<p> The values of the hyperparameters after model selection are returned by the
+function, so you can save the <samp>loghyper</samp> vector for future use.</p>
+
+</li>
+</ul>
+
+Returns:
+
+<ul>
+<li><samp>NMSE</samp>, <samp>NMLP</samp>: Error measures for test data. (Normalized Mean Square Error and
+Negative Mean Log Probability).</li>
+<li><samp>mu</samp>, <samp>S2</samp>: Predictive mean and variance under current hyperparameters at test points.</li>
+<li><samp>loghyper</samp>: Hyperparameters selected by optimization.</li>
+<li><samp>convergence</samp>: Training NLML values along optimization.</li>
+</ul>
+
+
+<h3>Examples</h3>
+<ul>
+
+<li>
+<p>Train a model once, then use it on two different test datasets:</p>
+<p><samp>[NMSE, mu_1, S2_1, NMLP, loghyper] = ssgprfixed_ui(X_tr, T_tr, X_tst_1, T_tst_1, 50);</samp></p>
+<p><samp>[NMSE, mu_2, S2_2, NMLP] = ssgprfixed_ui(X_tr, T_tr, X_tst_2, T_tst_2, 50, 0, loghyper);</samp></p>
+<p>Notice how we have used the hyperparameters found with the first call
+for a second dataset without repeating model selection.</p>
+</li>
+<li>
+<p>Use a different covariance function:</p>
+<p>Assume you have 50 spectral points drawn from the distribution corresponding to some desired covariance function.
+They are stored in <samp>w</samp> (one per row) and your initial guess for all the lengthscales, signal power and noise power
+is 1. Then you can learn the model and make predictions as follows:</p> 
+<p><samp>loghyper = [zeros(D+2,1); w(:)];</samp></p>
+<p><samp>[NMSE, mu] = ssgprfixed_ui(X_tr, T_tr, X_tst, T_tst, 50,-1000,loghyper);</samp></p>
+</li>
+</ul>
+As you see, you can do almost anything you want with the flexibility provided by
+this interface.
+
+<h2>Using <samp>ssgpr_ui.m</samp> to perform regression</h2>
+
+<h3>Syntax</h3>
+<p><samp>[NMSE, mu, S2, NMLP, loghyper, convergence] = ssgpr_ui(x_tr, y_tr, x_tst, y_tst, m, iteropt, loghyper)</samp></p>
+
+<ul>
+<li>Behaviour is as described in the previous section, but spectral points are also learned.</li>
+</ul>
+
+<h2>One step further: Calling directly the main SSGP code</h2>
+
+If you are writing your own specialized code, you may want to directly access the core
+code, <samp>ssgprfixed</samp> (or equivalently, <samp>ssgpr</samp>). In most cases, though, you will want to avoid this, and use the
+convenient interface provided by <samp>ssgprfixed_ui</samp>.
+
+<h3>Syntax (for training)</h3>
+
+<p><samp>[NLML, deriv_NLML] = ssgprfixed(hyper, x_tr, y_tr)</samp></p>
+
+<ul>
+<li><samp>x_tr</samp> and <samp>y_tr</samp> are the training data, one sample per column, input and output
+respectively.</li>
+<li><samp>hyper</samp> is the set of hyperparameters of the model:
+       <ul>
+       <li>the log of the <samp>D</samp> lengthscales,</li>
+       <li>the log of the square root of the signal power and</li>
+       <li>the log of the square root of the noise power.</li>
+       <li>the spectral points in the column format described before.</li>
+       </ul>
+</li></ul>
+
+Returns:
+<ul>
+<li><samp>NLML</samp>: Negative Log Marginal Likelihood of the training data under current
+hyperparameters.</li>
+<li><samp>deriv_NLML</samp>: Vector of the same size as <samp>hyper</samp>, with the partial derivatives of the NLML wrt each hyperparameter. Values corresponding to spectral points will be zero when using <samp>ssgprfixed
+</samp>.</li>
+</ul>
+
+<h3>Syntax (for prediction)</h3>
+
+<p><samp>[mu, S2] = ssgprfixed(hyper, x_tr, y_tr, x_tst)</samp></p>
+
+<ul>
+<li>The first three parameters are as before.</li>
+<li><samp>x_tst</samp> is a matrix with the samples for which
+prediction is required (one per row). </li>
+</ul>
+
+Returns:
+
+<ul>
+<li><samp>mu</samp>: Predictive mean under current hyperparameters at test points.</li>
+<li><samp>S2</samp>: Predictive variance under current hyperparameters at test points.</li>
+</ul>
+
+
+
+
+<!-- STOP EDITING HERE -->
+
+
+
+<!-- include the footer-->
+
+	<!-- F O O T E R -->
+	<!-- begin CUED footer line: cued-line.html -->
+
+	<img src="./Miguel Lazaro-Gredilla Homepage_advanced_files/pixel.gif" class="block" width="1" height="15" border="0" alt="">
+	<table cellpadding="0" cellspacing="0" border="0" width="100%" summary="">
+	<tbody><tr>
+	<td width="98%" bgcolor="#0099CC"><img src="./Miguel Lazaro-Gredilla Homepage_advanced_files/pixel.gif" class="block" width="1" height="4" border="0" alt=""></td>
+	</tr>
+	<tr>
+	<td width="98%" bgcolor="#CCCCCC"><img src="./Miguel Lazaro-Gredilla Homepage_advanced_files/pixel.gif" class="block" width="1" height="2" border="0" alt=""></td>
+	</tr>
+
+	</tbody></table>
+	<!--  end CUED footer line -->
+
+
+
+	<!-- footer links table --><!-- delete this section if you do not want to add any links -->
+	<table width="98%" cellpadding="0" cellspacing="0" border="0" summary="information footer">
+	<tbody><tr>
+	<td width="98%" valign="top" align="center" class="footerlinks">
+
+  <a href="http://www.tsc.uc3m.es/"><strong>Universidad Carlos III de Madrid, Dpto. Teoría de la Señal y Comunicaciones</strong></a>
+
+	</td>
+
+	</tr>
+	</tbody></table>
+	<!-- end footer links table -->
+
+
+	<!-- add your email and last updated date below -->
+	<br>
+	<span class="footercued">
+	©&nbsp;</span></a><a href="mailto:miguel@ieee.org">Miguel Lázaro-Gredilla</a><br>
+	
+	Last modified: 2009-03-05, 17:26
+	
+
+<div class="extLives"></div></body></html>

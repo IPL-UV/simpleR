@@ -186,8 +186,13 @@ set(0,'DefaultAxesFontName',fontname,'DefaultAxesFontSize',fontsize,'DefaultAxes
     'DefaultLineLineWidth',3,'DefaultLineMarkerSize',10,'DefaultLineColor',[0 0 0]);
 
 % Paths
-addpath('./standard')               % Standard statistical regression: LR, LASSO, TREES, SVR, KRR, GPR
-addpath('./vhgpr')                  % VHGPR [Lázaro-Gredilla, 2011]
+addpath('./vhgpr')      % VHGPR [Lázaro-Gredilla, 2011]
+addpath('./standard')   % Standard statistical regression: LR, LASSO, TREES, SVR, KRR, GPR
+addpath('./ARESLab')    % ARESLab -- Adaptive Regression Splines toolbox for Matlab/Octave, ver. 1.5.1, by Gints Jekabsons
+addpath('./LWP')        % Locally-Weighted Polynomials, Version 1.3, by Gints Jekabsons
+addpath('./WGP')        % Warped GPs
+addpath('./ssgp')       % Sparse Spectrum Gaussian Process (SSGP)  [Lázaro-Gredilla, 2008]
+
 
 clear;clc;close all;
 

@@ -1,0 +1,110 @@
+@import "import.css";
+
+body {background-color: #ffffff; color: #000000;}
+
+p, ul, ol, li, table, td, dt, dd {font-family: Arial, Helvetica,
+sans-serif; }
+li {padding: 3px 0 1px  0;}
+pre, tt {font-family: Courier, monospace; font-size: 90%;}
+.noshow, .noshowsmall {display: none;}
+
+a {text-decoration:none; }
+a:link {color: #003399; font-family: Arial, Helvetica, sans-serif;}
+a:visited {color: #cc3333; font-family: Arial, Helvetica, sans-serif;}
+a:link:hover, a:visited:hover {text-decoration: underline; font-family:
+Arial, Helvetica, sans-serif;}
+a[href]:active {color: #cc0000; font-family: Arial, Helvetica, sans-serif;}
+
+a.bread {font-size: 80%; font-weight: bold;}
+a.small {font-size: 80%; }
+a.univbread {font-size: 90%; font-weight: bold;}
+p.small {font-size: 90%;}
+p.smallc {font-size: 90%; text-align:center; font-weight: bold;}
+p.bread {padding-top: 0px; margin-top: 0px;}
+p.foot {font-size: 110%; text-align:center;}
+div.c3 {text-align: center}
+p.colour { font-family: Arial, Helvetica, sans-serif; font-size:
+110%; border: none; width: 100%; background: #99ccff; text-align: center;}
+
+.bigb {font-size: 110%; font-weight: bold;} 
+.small {font-size: 90%;}
+.deptitle {font-size: 140%; color: #000000; font-weight: bold;}
+.title {font-size: 130%; color: #990000; font-weight: bold;}
+.center {text-align:center;}
+.footer {font-size: 80%; margin: 6px 0 6px  0;}
+.smallc {font-size: 90%; text-align:center; font-weight: bold;}
+.smallb {font-size: 90%; font-weight: bold;}
+.smallr {font-size: 90%; text-align: right;}
+.cpage {margin: auto;}
+.widthlimit {width: 200px;}
+.position {margin: 0 10px 0 10px}
+.flash {background:#FFFF66; font-size: 90%;}
+.current {padding: 2px; border:solid 2px #330066; font-size: 90%;}
+
+h1 {font-weight: bold; font-size: 120%; color: #990000; font-family: Arial, Helvetica, sans-serif;}
+h2 {font-weight: bold; font-size: 110%; color: #333333; font-family: Arial, Helvetica, sans-serif;}
+h2.lsp {font-weight: bold; font-size: 110%; color: #333333; font-family: Arial, Helvetica, sans-serif; margin: 6px
+0 2px 0;}
+h2.nst {font-weight: bold; font-size: 110%; color: #333333; font-family: Arial, Helvetica, sans-serif;
+margin: 12px 0 -6px 0;}
+h2.col
+{font-weight: bold; font-size: 110%; color: #333333; font-family: Arial, Helvetica, sans-serif; background:
+#0099cc;margin: 1px 0 1px 0;}
+h3 {font-weight: bold; font-style: italic; font-size: 100%; color: #333333; font-family: Arial, Helvetica, sans-serif;}
+h4 {font-weight: bold; font-size: 90%; color: #333333; font-family: Arial, Helvetica, sans-serif;}
+h5 {font-weight: bold; font-size: 80%; color: #333333; font-family: Arial, Helvetica, sans-serif;}
+.head {font-weight: bold; font-size: 90%; color: #333333; font-family:
+Arial, Helvetica, sans-serif; margin:12px 0px 0px 0px;}
+
+/* original left-hand nav style for use with spacer gif - convert to use new version witout spacer gif */
+p.nav {font-size: 80%;}
+.nav {font-size: 80%;}
+span.activenav {font-size: 80%; color: #000000}
+
+/* netscape 6 correction */
+.null {font-size: 1px;}
+
+/* linux correction */
+.block {display: block;}
+
+/* new left-hand nav correction to remove need for spacer gif */
+p.newnav {font-size: 80%; margin: 0.5em 0 0 0;}
+span.newactivenav {font-size: 80%; color: #000000; margin: 0.5em 0 0 0;}
+.alphaactivenav {background:#99ccff;}
+
+/* spaced list for aspirations page */
+li.sp {margin: 0.5em 0 0 0;}
+
+
+/* research page */
+h1.small  {font-weight: bold; font-size: 100%; color: #990000; line-height: 100%; font-family: arial, helvetica, sans-serif;}
+
+/* home page */
+.homeheading {font-weight: bold; font-size: 80%; font-family: arial, helvetica, sans-serif;  
+color: #990000; margin: 6px 0 4px  0;}
+
+a.homemenu  {font-weight: bold; font-family: arial, helvetica, sans-serif;}
+a.homemenu2 {font-size: 80%; font-family: arial, helvetica, sans-serif;}
+a.homemenulist {font-weight: bold; font-size: 90%; font-family: arial, helvetica, sans-serif;}
+
+p.homealert {font-size: 80%; color: #990000; font-family: arial, helvetica, sans-serif;}
+p.homenews {font-size: 80%; font-family: arial, helvetica, sans-serif;}
+
+
+<!--from admin styles-->
+.linkcell { background: #003399; color: #ffffff }
+a.cell { font-family: sans-serif; text-decoration:none }
+a.cell:link { color: #ffffff } 
+a.cell:visited { color: #ffffff } 
+a.cell:active { color: #ffff33 }
+
+div.box {width: 90%; padding: 10px; border: 2px solid #0099cc;}
+div.leftbox {width: 160px; text-align: right; padding: 10px; padding-top: 0px; margin-right: 20px; border: 2px
+solid #0099cc;}
+
+.hplist p {margin: 0 0 3em 0; padding: 0;}
+.hpbox {width: 250px; margin: 20px 5px 20px 50px; font-size: 90%; text-align: right;}
+
+table.index td {font-weight: bold; text-align:center;}
+h1.indexns {font-weight: bold; font-size: 120%; color: #990000; font-family: Arial, Helvetica, sans-serif;}
+p.index.ns {font-size: 90%;}
