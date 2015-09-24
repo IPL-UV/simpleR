@@ -8,11 +8,11 @@
 %    * Elastic Net (ELASTICNET).
 
 % SPLINES and POLYNOMIALS
-% ---* Adaptive Regression Splines (ARES)
-% ---* Locally Weighted Polynomials (LWP)
+%    * Adaptive Regression Splines (ARES)
+%    * Locally Weighted Polynomials (LWP)
 
 % NEIGHBORS
-% ---* K-nearest neighbors regression (KNNR)
+%    * k-nearest neighbors regression (KNNR)
 
 %   TREE MODELS
 %    * Decision trees (TREE)
@@ -23,6 +23,7 @@
 
 % NEURAL NETWORS
 %    * Neural networks (NN)
+% ---* RBF Neural networks (NN)
 %    * Extreme Learning Machines (ELM)
 
 % KERNEL METHODS

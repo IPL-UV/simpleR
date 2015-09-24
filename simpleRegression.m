@@ -193,7 +193,6 @@ addpath('./LWP')        % Locally-Weighted Polynomials, Version 1.3, by Gints Je
 addpath('./WGP')        % Warped GPs
 addpath('./ssgp')       % Sparse Spectrum Gaussian Process (SSGP)  [Lázaro-Gredilla, 2008]
 
-
 clear;clc;close all;
 
 %% Data
@@ -229,28 +228,23 @@ Ytrain  = Ytrain - my;
 % METHODS = {'SVR' 'KRR' 'RVM' 'GPR' 'VHGPR'} % KERNELS
 % METHODS = {'ELM'}
 
-METHODS = {'RLR' 'LASSO' 'ENET' 'ARES' 'LWP'}
+METHODS = {'RLR' 'LASSO' 'ENET' 'LWP' 'KNNR' 'TREE' 'BAGTREE' 'BOOST' 'RF1' 'RF2'}
+
+
+%%% NOTES:
+%%%   - 'ARES' tarda una barbaritat!
+%%%   - Check the prediction weighting in KNNR
 
 %% TRAIN ALL MODELS
 numModels = numel(METHODS);
 
 for m=1:numModels
     fprintf(['Training ' METHODS{m} '... \n'])
-    
     t=cputime;
     eval(['model = train' METHODS{m} '(Xtrain,Ytrain);']); % Train the model
-    eval(['Yp = test' METHODS{m} '(model,Xtest);']); % Test the model
+    eval(['Yp = test' METHODS{m} '(model,Xtest);']);       % Test the model
     Ypred(:,m)     = Yp + my;
-%     %     Ypred(:,m)     = (Yp+0.5)*(Ma-mi) + mi;
-%     if phys==1
-%         results(m)     = assessment(10.^Ypred(:,m),10.^(Ytest),'regress');
-%     else
-        results(m)     = assessment(Ypred(:,m),Ytest,'regress');
-%     end
-    %     results(m)     = assessment(log10(Ypred(:,m)),log10(Ytest),'regress')
-    %     results(m)     = assessment(Ypred(:,m).^(1/4),Ytest.^(1/4),'regress')
-    %     results(m)     = assessment(Ypred(:,m).^(1/2),Ytest.^(1/2),'regress')
-    
+    results(m)     = assessment(Ypred(:,m),Ytest,'regress');   
     CPUTIMES(m) = cputime-t;
 end
 
@@ -264,6 +258,7 @@ for m=1:numModels
     fprintf([METHODS{m} '\t & %3.3f\t & %3.3f\t & %3.3f\t & %3.3f \\\\ \n'],abs(results(m).ME),results(m).RMSE,results(m).MAE,results(m).R)
 end
 fprintf('----------------------------------------------------------------------------------- \n')
+
 CPUTIMES
 [val idx] = min([results.RMSE]);
 disp(['The best method in RMSE terms is: ' METHODS{idx}])
