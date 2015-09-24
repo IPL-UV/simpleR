@@ -13,6 +13,7 @@
 
 % NEIGHBORS
 %    * k-nearest neighbors regression (KNNR)
+%    * Weighted k-nearest neighbors regression (WKNNR)
 
 %   TREE MODELS
 %    * Decision trees (TREE)
