@@ -1,0 +1,3 @@
+exam_train and exam_test are example scripts of how to train and predict with the warped GP. Further information can be gained by examining comments within the code. Files with 01 refer to Gaussian covariance, and those with 03 refer to neural net covariance.
+
+All code is based on, and uses, Carl Edward Rasmussen's code for GPs which is also supplied here: gp01lik, gp01pred, gp03lik, gp03pred, minimize.

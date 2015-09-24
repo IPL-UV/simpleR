@@ -224,7 +224,7 @@ Ytrain  = Ytrain - my;
 % METHODS = {'SVR' 'KRR' 'RVM' 'GPR' 'VHGPR'} % KERNELS
 % METHODS = {'ELM'}
 
-METHODS = {'RLR' 'LASSO' 'ENET' }%'ARES' 'LWP'}
+METHODS = {'RLR' 'LASSO' 'ENET' 'ARES' 'LWP'}
 
 %% TRAIN ALL MODELS
 numModels = numel(METHODS);
