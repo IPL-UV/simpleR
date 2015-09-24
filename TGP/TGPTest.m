@@ -29,7 +29,7 @@ options = optimset(options,'Display','off');
 options = optimset(options,'MaxIter',50);
 options = optimset(options,'TolFun',1e-6);
 options = optimset(options,'TolX',1e-6);
-options = optimset(options,'LineSearchType','cubicpoly');
+% options = optimset(options,'LineSearchType','cubicpoly');
 aaa = sum(Target.^2,2);
 
 % Optimization

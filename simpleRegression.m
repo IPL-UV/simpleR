@@ -200,7 +200,7 @@ addpath('./TGP')        % Twin Gaussian Process (TGP) [Liefeng Bo and Cristian S
 clear;clc;close all;
 
 %% Data 1:
-N     = 100000;
+N     = 1000;
 X     = [sin(1:N)', cos(1:N)', tanh(1:N)'] + 0.2*randn(N,3);
 Y     = sin(1:N)';
 VARIABLES = {'SIN', 'COS', 'TANH'};
@@ -220,7 +220,7 @@ VARIABLES = {'SIN', 'COS', 'TANH'};
 
 if 1
     %% Split training-testing data
-    rate = 0.2; %[0.05 0.1 0.2 0.3 0.4 0.5 0.6]
+    rate = 0.1; %[0.05 0.1 0.2 0.3 0.4 0.5 0.6]
     % Fix seed random generator (important: disable when doing the 100 realizations loop!)
     rand('seed',12345);
     randn('seed',12345);
@@ -243,9 +243,9 @@ Ytrain  = Ytrain - my;
 % METHODS = {'LWP' 'ARES'} % SPLINES
 % METHODS = {'KNNR' 'WKNNR'} % NEIGHBORS
 %METHODS = {'TREE' 'BAGTREE' 'BOOST' 'RF1' 'RF2'}   % TREES
-% METHODS = {'NN' 'ELM'}  % NEURAL NETS
+METHODS = {'NN' 'ELM'}  % NEURAL NETS
 % METHODS = {'SVR' 'KRR' 'RVM' 'KSNR' 'SKRRrbf' 'SKRRlin' 'RKS'}   % KERNELS
-METHODS = {'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'}  % GPs  
+% METHODS = {'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'}  % GPs  
 
 %%%% ALL!
 % METHODS = {'RLR' 'LASSO' 'ENET' 'LWP'  'ARES' 'KNNR' 'WKNNR', ...  % 

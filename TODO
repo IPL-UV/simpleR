@@ -1,3 +1,7 @@
+MODELS
+  - Neural networks are not too well represented. Add (1) rbfnets, and (2) Feedforward Backpropagation nets in http://www.mathworks.com/matlabcentral/fileexchange/38310-deep-learning-toolbox
+  - ELM needs to be checked
+
 CROSSVAL
   - cross validate the number of trees in RF and bag and boost!
   - cross validate all methods the same way? 
@@ -31,4 +35,4 @@ MISC
    - compute cputime and memory for a complete comparison
    - 1D problems do not work!
    - Cleanup folders, remove duplicated functions, remove unused functions ---> check dependencies
-
+   - Data normalization and scaling!
