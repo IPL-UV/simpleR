@@ -186,13 +186,13 @@ set(0,'DefaultAxesFontName',fontname,'DefaultAxesFontSize',fontsize,'DefaultAxes
     'DefaultLineLineWidth',3,'DefaultLineMarkerSize',10,'DefaultLineColor',[0 0 0]);
 
 % Paths
-addpath('./vhgpr')      % VHGPR [Lázaro-Gredilla, 2011]
 addpath('./standard')   % Standard statistical regression: LR, LASSO, TREES, SVR, KRR, GPR
-addpath('./ARESLab')    % ARESLab -- Adaptive Regression Splines toolbox for Matlab/Octave, ver. 1.5.1, by Gints Jekabsons
+addpath('./VHGPR')      % VHGPR [Lázaro-Gredilla, 2011]
+addpath('./ARES')    % ARESLab -- Adaptive Regression Splines toolbox for Matlab/Octave, ver. 1.5.1, by Gints Jekabsons
 addpath('./LWP')        % Locally-Weighted Polynomials, Version 1.3, by Gints Jekabsons
 addpath('./WGP')        % Warped GPs
-addpath('./ssgp')       % Sparse Spectrum Gaussian Process (SSGP)  [Lázaro-Gredilla, 2008]
-addpath('./TGP')        % Twin Gaussian Process (SSGP) [Liefeng Bo and Cristian Sminchisescu]  http://www.maths.lth.se/matematiklth/personal/sminchis/code/TGP.html
+addpath('./SSGP')       % Sparse Spectrum Gaussian Process (SSGP)  [Lázaro-Gredilla, 2008]
+addpath('./TGP')        % Twin Gaussian Process (TGP) [Liefeng Bo and Cristian Sminchisescu]  http://www.maths.lth.se/matematiklth/personal/sminchis/code/TGP.html
 
 clear;clc;close all;
 
@@ -225,7 +225,7 @@ Ytrain  = Ytrain - my;
 %METHODS = {'TREE' 'BAGTREE' 'BOOST' 'RF1' 'RF2'}   % TREES
 % METHODS = {'NN' 'ELM'}  % NEURAL NETS
 % METHODS = {'SVR' 'KRR' 'RVM' 'KSNR' 'SKRRrbf' 'SKRRlin' 'RKS'}   % KERNELS
-METHODS = { 'TGP'}  % GPs   'GPR' 'VHGPR' 'WGPR' 'SSGPR'
+METHODS = { 'MGP'}  % GPs   'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'
 
 %% TRAIN ALL MODELS
 numModels = numel(METHODS);
