@@ -1,0 +1,17 @@
+
+%   - 'ARES' is tooooo slow!
+%   - Check the prediction weighting in KNNR
+%   - cross validate the number of trees in RF and bag and boost!
+%   - cross validate all methods the same way? 
+%   - Multioutput models?
+%   - Functions for model analysis: tress, rf feature ranking, GP ARD and SA, and for all: permutation! 
+%   - Warnings on expected memory, cpu cost, before training
+%   - Warnings on illposing
+%   - Ensemble methods?
+%   - Improve assessment.m with other specific measures for regression (nMSE, loglik)
+%   - Control verbosity
+%   - confidence intervals? 
+%   - compute cputime and memory for a complete comparison
+%
+%
+%

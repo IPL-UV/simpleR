@@ -197,7 +197,7 @@ clear;clc;close all;
 
 %% Data
 N     = 1000;
-X     = [sin(1:N)', cos(1:N)', tanh(1:N)'] + 0.1*randn(N,3);
+X     = [sin(1:N)', cos(1:N)', tanh(1:N)'] + 0.3*randn(N,3);
 Y     = sin(1:N)';
 VARIABLES = {'SIN', 'COS', 'TANH'};
 
@@ -223,8 +223,8 @@ Ytrain  = Ytrain - my;
 % METHODS = {'RLR' 'LASSO' 'ENET' 'LWP' 'KNNR'} % LINEAR
 %METHODS = {'TREE' 'BAGTREE' 'BOOST' 'RF1' 'RF2'}   % TREES
 % METHODS = {'NN' 'ELM'}  % NEURAL NETS
-METHODS = {'SVR' 'KRR' 'RVM' 'KSNR' 'SKRRrbf' 'SKRRlin' 'RKS'}   % KERNELS 'SVR' 'KRR' 'RVM' 'KSNR' 'SKRRrbf' 'SKRRlin' 
-% METHODS = {'GPR' 'VHGPR'}
+% METHODS = {'SVR' 'KRR' 'RVM' 'KSNR' 'SKRRrbf' 'SKRRlin' 'RKS'}   % KERNELS
+METHODS = {'GPR' 'VHGPR' 'WGPR' 'SSGPR'}  % GPs
 
 %% TRAIN ALL MODELS
 numModels = numel(METHODS);

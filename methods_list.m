@@ -30,14 +30,14 @@
 %    * Support Vector Regression (SVR)
 %    * Kernel Ridge Regression (KRR), aka Least Squares SVM
 %    * Relevance Vector Machine (RVM)
-%  ---  * Kernel signal to noise regression (KSNR)
-%  ---  * Structured KRR (SKRR)
-%  ---  * Random Kitchen Sinks Regression (RKS)
+%    * Kernel signal to noise regression (KSNR)
+%    * Structured KRR (SKRR)
+%    * Random Kitchen Sinks Regression (RKS)
 %
 % % GAUSSIAN PROCESSES
 %    * Gaussian Process Regression (GPR)
 %    * Variational Heteroscedastic Gaussian Process Regression (VHGPR)
-%  ---  * Warped Gaussian Processes (WGPR)
-%  ---  * Sparse spectrum Gaussian Process Regression (SSGPR)
+%    * Warped Gaussian Processes (WGPR)
+%  ---  * Sparse Spectrum Gaussian Process Regression (SSGPR)
 %  ---  * Twin Gaussian Processes (TGP)
 
