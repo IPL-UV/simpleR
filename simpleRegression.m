@@ -220,20 +220,11 @@ Ytrain  = Ytrain - my;
 
 %% SELECT METHODS FOR COMPARISON
 
-% METHODS = {'RLR' 'LASSO' 'ELASTICNET' 'TREE' 'BAGTREE' 'BOOST' 'NN' 'ELM' 'SVR' 'KRR' 'RVM' 'GPR' 'VHGPR'}
-% METHODS = {'RLR' 'TREE' 'BAGTREE' 'BOOST' 'NN' 'ELM' 'SVR' 'KRR' 'RVM' 'GPR' 'VHGPR'}
-% METHODS = {'RLR' 'LASSO' 'ENET'} % LINEAR
-% METHODS = {'TREE' 'BAGTREE' 'BOOST'} % TREES
-% METHODS = {'NN' 'ELM'} % NEURAL NETS
-% METHODS = {'SVR' 'KRR' 'RVM' 'GPR' 'VHGPR'} % KERNELS
-% METHODS = {'ELM'}
-
-METHODS = {'RLR' 'LASSO' 'ENET' 'LWP' 'KNNR' 'TREE' 'BAGTREE' 'BOOST' 'RF1' 'RF2'}
-
-
-%%% NOTES:
-%%%   - 'ARES' tarda una barbaritat!
-%%%   - Check the prediction weighting in KNNR
+% METHODS = {'RLR' 'LASSO' 'ENET' 'LWP' 'KNNR'} % LINEAR
+%METHODS = {'TREE' 'BAGTREE' 'BOOST' 'RF1' 'RF2'}   % TREES
+% METHODS = {'NN' 'ELM'}  % NEURAL NETS
+METHODS = {'SVR' 'KRR' 'RVM' 'KSNR' 'SKRRrbf' 'SKRRlin' 'RKS'}   % KERNELS 'SVR' 'KRR' 'RVM' 'KSNR' 'SKRRrbf' 'SKRRlin' 
+% METHODS = {'GPR' 'VHGPR'}
 
 %% TRAIN ALL MODELS
 numModels = numel(METHODS);
