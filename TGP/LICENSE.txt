@@ -1,0 +1,23 @@
+TGP -- Twin Gaussian Processes
+==================================
+
+Authors: Liefeng Bo, Cristian Sminchisescu
+
+For licensing or any other requests including bug reports, please contact both Liefeng Bo and Cristian Sminchisescu:
+
+Liefeng Bo				liefengbo@gmail.com	
+Cristian Sminchisescu		Cristian.Sminchisescu@ins.uni-bonn.de
+    
+
+LICENSING AGREEMENT
+
+This program is granted free of charge for non-commercial research and education purposes. The software and derivatives of the software must not be distributed, either commercially or academically without prior permission from the authors. A license must be obtained from the authors for commercial purposes. Scientific results produced using the TGP software shall acknowledge its use from the authors and cite the following article (please, let us know if the code turns out to be useful in your work and/or whenever research based on it is 
+published):  
+
+Liefeng Bo and Cristian Sminchisescu, 
+Twin Gaussian Processes for Structured Prediction, International Journal of Computer Vision, vol. 87, pp. 28-52, 2010.
+
+THE PROGRAM IS LICENSED FREE OF CHARGE FOR ACADEMIC USE. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. By using the TGP software you agree to all licensing terms.
+
+
+
