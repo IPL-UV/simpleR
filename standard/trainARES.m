@@ -1,7 +1,7 @@
 function model_ARES = trainARES(X,Y)
 
-maxBasis = 60;  % reasonable number
-vfold    = 5;
+maxBasis = 20;  % reasonable number
+vfold    = 3;
 
 for b=1:maxBasis
     params = aresparams(b, [], [], [], [], 2);

@@ -1,4 +1,4 @@
-function model = trainKNNR(X,Y)
+function model = trainWKNNR(X,Y)
 
 [n d] = size(X);
 rate = 0.66;      % Use 2/3 - 1/3 for xvalidation
@@ -14,7 +14,9 @@ K = 1:20;
 res = Inf;
 for k=K
     [IDX,D] = knnsearch(Xtrain,Xtest,'K',k);
-    Ypred   = mean(Ytrain(IDX),2);
+    W = 1./(D+eps); % compute the inverse distances to each neighbor
+    W = W./repmat(sum(W,2),1,k); % normalize in rows to obtain the relative inverse distance to each neighbor
+    Ypred = nansum(Ytrain(IDX) .* W, 2);
     res(k) = norm(Ytest-Ypred,'fro');
 end
 % figure,plot(K,res,'ko-'), grid
