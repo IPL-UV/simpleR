@@ -186,7 +186,10 @@ set(0,'DefaultAxesFontName',fontname,'DefaultAxesFontSize',fontsize,'DefaultAxes
     'DefaultLineLineWidth',3,'DefaultLineMarkerSize',10,'DefaultLineColor',[0 0 0]);
 
 % Paths
+addpath('./AUX')   % Auxiliary functions for visualization, results analysis, plots, etc.
 addpath('./standard')   % Standard statistical regression: LR, LASSO, TREES, SVR, KRR, GPR
+addpath('./SVM')   % libsvm code and kernel matrix
+addpath('./MRVM')   % Relevance vector machine (RVM)
 addpath('./VHGPR')      % VHGPR [Lázaro-Gredilla, 2011]
 addpath('./ARES')    % ARESLab -- Adaptive Regression Splines toolbox for Matlab/Octave, ver. 1.5.1, by Gints Jekabsons
 addpath('./LWP')        % Locally-Weighted Polynomials, Version 1.3, by Gints Jekabsons
@@ -237,7 +240,7 @@ Ytrain  = Ytrain - my;
 %% SELECT METHODS FOR COMPARISON
 
 % METHODS = {'RLR' 'LASSO' 'ENET'} % LINEAR
-METHODS = {'LWP' 'ARES'} % SPLINES
+% METHODS = {'LWP' 'ARES'} % SPLINES
 % METHODS = {'KNNR' 'WKNNR'} % NEIGHBORS
 %METHODS = {'TREE' 'BAGTREE' 'BOOST' 'RF1' 'RF2'}   % TREES
 % METHODS = {'NN' 'ELM'}  % NEURAL NETS
@@ -245,10 +248,11 @@ METHODS = {'LWP' 'ARES'} % SPLINES
 % METHODS = {'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'}  % GPs  
 % METHODS = {'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'}  % GPs  
 
-% METHODS = {'RLR' 'LASSO' 'ENET' 'LWP'  'ARES' 'KNNR' 'WKNNR', ...  % 
-%     'TREE' 'BAGTREE' 'BOOST' 'RF1' 'RF2', ...
-%     'NN' 'ELM', 'SVR' 'KRR' 'RVM' 'KSNR' 'SKRRrbf' 'SKRRlin' 'RKS', ...
-%     'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'} 
+%%%% ALL!
+METHODS = {'RLR' 'LASSO' 'ENET' 'LWP'  'ARES' 'KNNR' 'WKNNR', ...  % 
+    'TREE' 'BAGTREE' 'BOOST' 'RF1' 'RF2', ...
+    'NN' 'ELM', 'SVR' 'KRR' 'RVM' 'KSNR' 'SKRRrbf' 'SKRRlin' 'RKS', ...
+    'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'} 
 
 %% TRAIN ALL MODELS
 numModels = numel(METHODS);
