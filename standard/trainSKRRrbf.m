@@ -41,6 +41,7 @@ for sigma1 = SIGMAS1
                     gamma = (Ktrain + lambda1*eye(n))\Ytrain;
                 else
                     gamma = ((Ktrain + lambda1*eye(n)) \ KtrainY) * ((KtrainY+lambda2*eye(n))\Ytrain);
+   %                 gamma = (Ktrain + lambda1*eye(n)) \ ( KtrainY  * (KtrainY+lambda2*eye(n))\Ytrain);
                 end
                 Ypred = Kvalid*gamma;
                 RESULTS(i,:) = [sigma1 sigma2 lambda1 lambda2 norm(Yvalid-Ypred,'fro')];
@@ -66,6 +67,7 @@ if BestLambda2==0
     alpha = (K + BestLambda1*eye(ntrain))\YY;
 else
 alpha = ((K + BestLambda1*eye(ntrain))\Ky) * ((Ky + BestLambda2*eye(ntrain))\YY);
+% alpha = (K + BestLambda1*eye(ntrain))\ (Ky  * (Ky + BestLambda2*eye(ntrain))\YY);
 end
 
 model.BestSigma1 = BestSigma1;

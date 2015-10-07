@@ -201,8 +201,9 @@ clear;clc;close all;
 
 %% Data 1:
 N     = 1000;
-X     = [sin(1:N)', cos(1:N)', tanh(1:N)'] + 0.2*randn(N,3);
-Y     = sin(1:N)';
+X     = [sin(1:N)', cos(1:N)', tanh(1:N)'] + 0.1*randn(N,3);
+% Y     = sin(1:N)';
+Y = [sin(1:N)', cos(1:N)', tanh(1:N)'];
 VARIABLES = {'SIN', 'COS', 'TANH'};
 
 %% Data 2:
@@ -232,10 +233,11 @@ if 1
     Xtest  = X(r(ntrain+1:end),:);   % test set
     Ytest  = Y(r(ntrain+1:end),:);   % observed test variable
 end
+ntest = size(Ytest,1);
 
 %% Remove the mean of Y for training only
 my      = mean(Ytrain);
-Ytrain  = Ytrain - my;
+Ytrain  = Ytrain - repmat(my,ntrain,1);
 
 %% SELECT METHODS FOR COMPARISON
 % METHODS = {'KRR'} 
@@ -263,11 +265,16 @@ for m=1:numModels
     t=cputime;
     eval(['model = train' METHODS{m} '(Xtrain,Ytrain);']); % Train the model
     eval(['Yp = test' METHODS{m} '(model,Xtest);']);       % Test the model
-    Ypred(:,m)     = Yp + my;
-    results(m)     = assessment(Ypred(:,m),Ytest,'regress');   
+    Ypred     = Yp + repmat(my,ntest,1);
+    results(m) = norm(Ytest-Ypred,'fro');
+%     results(m)     = assessment(Ypred(:,m),Ytest,'regress');   
     CPUTIMES(m) = cputime-t;
 end
 
+results
+CPUTIMES
+
+break
 % % Fast training (divide and conquer strategy, nice for kernel machines)
 % for m=1:numModels
 %     fprintf(['Fast Training ' METHODS{m} '... \n'])
