@@ -245,6 +245,7 @@ Ytrain  = Ytrain - my;
 %METHODS = {'TREE' 'BAGTREE' 'BOOST' 'RF1' 'RF2'}   % TREES
 % METHODS = {'NN' 'RBFNET' 'ELM'}  % NEURAL NETS
 % METHODS = {'SVR' 'KRR' 'RVM' 'KSNR' 'SKRRrbf' 'SKRRlin' 'RKS'}   % KERNELS
+METHODS = {'KRR' 'SKRRrbf' 'SKRRlin'}   % KERNELS
 % METHODS = {'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'}  % GPs  
 
 %%%% ALL!

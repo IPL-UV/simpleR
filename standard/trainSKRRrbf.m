@@ -65,7 +65,7 @@ Ky = kernelmatrix('rbf',YY',YY',BestSigma2);
 if BestLambda2==0
     alpha = (K + BestLambda1*eye(ntrain))\YY;
 else
-    alpha = ((K + BestLambda1*eye(ntrain))\Ky) * ((Ky + BestLambda2*eye(ntrain))\YY);
+alpha = ((K + BestLambda1*eye(ntrain))\Ky) * ((Ky + BestLambda2*eye(ntrain))\YY);
 end
 
 model.BestSigma1 = BestSigma1;
