@@ -1,7 +1,7 @@
 %
 % simpleR: SIMPLE REGRESSION DEMO. 
 %        Version: 3.1
-%        Date   : 07-Oct-2015 
+%        Date   : 29-Ja6n-201 
 %
 %    This demo shows the training and testing of several state-of-the-art statistical models for regression.
 %
@@ -46,7 +46,7 @@
 %           -- The standard version of the ELM with random initialization of the weights
 %              and pseudoinverse of the output spanning subspace.
 %           -- The number of hidden neurons is crossvalidated but no regularization is included
-
+%
 %    * Support Vector Regression (SVR)
 %           -- Standard support vector implementation for regression and function approximation using the libsvm toolbox.
 %           -- Three parameters are adjusted via xval: the regularization term C, the \varepsilon insensitivity
@@ -88,7 +88,7 @@
 %              [Rasmussen 2006] Carl Edward Rasmussen and Christopher K. I. Williams
 %                   Gaussian Processes for Machine Learning
 %                   The MIT Press, 2006. ISBN 0-262-18253-X.
-
+%
 %    * Variational Heteroscedastic Gaussian Process Regression (VHGPR)
 %           -- We consider an anisotropic RBF kernel that has a scale, lengthscale
 %              per input feature (band), and a input-dependent noise power parameter as hyperparameters
@@ -186,12 +186,12 @@ set(0,'DefaultAxesFontName',fontname,'DefaultAxesFontSize',fontsize,'DefaultAxes
     'DefaultLineLineWidth',3,'DefaultLineMarkerSize',10,'DefaultLineColor',[0 0 0]);
 
 % Paths
-addpath('./AUX')   % Auxiliary functions for visualization, results analysis, plots, etc.
+addpath('./AUX')        % Auxiliary functions for visualization, results analysis, plots, etc.
 addpath('./standard')   % Standard statistical regression: LR, LASSO, TREES, SVR, KRR, GPR
-addpath('./SVM')   % libsvm code and kernel matrix
-addpath('./MRVM')   % Relevance vector machine (RVM)
+addpath('./SVM')        % libsvm code and kernel matrix
+addpath('./MRVM')       % Relevance vector machine (RVM)
 addpath('./VHGPR')      % VHGPR [Lázaro-Gredilla, 2011]
-addpath('./ARES')    % ARESLab -- Adaptive Regression Splines toolbox for Matlab/Octave, ver. 1.5.1, by Gints Jekabsons
+addpath('./ARES')       % ARESLab -- Adaptive Regression Splines toolbox for Matlab/Octave, ver. 1.5.1, by Gints Jekabsons
 addpath('./LWP')        % Locally-Weighted Polynomials, Version 1.3, by Gints Jekabsons
 addpath('./WGP')        % Warped GPs
 addpath('./SSGP')       % Sparse Spectrum Gaussian Process (SSGP)  [Lázaro-Gredilla, 2008]
