@@ -240,14 +240,14 @@ my      = mean(Ytrain);
 Ytrain  = Ytrain - repmat(my,ntrain,1);
 
 %% SELECT METHODS FOR COMPARISON
-% METHODS = {'KRR'} 
+METHODS = {'KRR'} 
 % METHODS = {'RLR' 'LASSO' 'ENET'} % LINEAR
 % METHODS = {'LWP' 'ARES'} % SPLINES
 % METHODS = {'KNNR' 'WKNNR'} % NEIGHBORS
-%METHODS = {'TREE' 'BAGTREE' 'BOOST' 'RF1' 'RF2'}   % TREES
+% METHODS = {'TREE' 'BAGTREE' 'BOOST' 'RF1' 'RF2'}   % TREES
 % METHODS = {'NN' 'RBFNET' 'ELM'}  % NEURAL NETS
 % METHODS = {'SVR' 'KRR' 'RVM' 'KSNR' 'SKRRrbf' 'SKRRlin' 'RKS'}   % KERNELS
-METHODS = {'KRR' 'SKRRrbf' 'SKRRlin'}   % KERNELS
+% METHODS = {'KRR' 'SKRRrbf' 'SKRRlin'}   % KERNELS
 % METHODS = {'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'}  % GPs  
 
 %%%% ALL!
@@ -275,6 +275,7 @@ results
 CPUTIMES
 
 break
+
 % % Fast training (divide and conquer strategy, nice for kernel machines)
 % for m=1:numModels
 %     fprintf(['Fast Training ' METHODS{m} '... \n'])
@@ -310,7 +311,6 @@ xlabel('CPU Time [s]')
 ylabel('Methods')
 grid
 
-break
 
 %% THE ERROR BOXPLOTS
 figure,
