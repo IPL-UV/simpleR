@@ -1,7 +1,7 @@
 %
-% simpleR: SIMPLE REGRESSION DEMO. 
+% simpleR: SIMPLE REGRESSION DEMO.
 %        Version: 3.1
-%        Date   : 29-Ja6n-201 
+%        Date   : 29-Ja6n-201
 %
 %    This demo shows the training and testing of several state-of-the-art statistical models for regression.
 %
@@ -200,19 +200,20 @@ addpath('./TGP')        % Twin Gaussian Process (TGP) [Liefeng Bo and Cristian S
 clear;clc;close all;
 
 %% Data 1:
-N     = 1000;
-X     = [sin(1:N)', cos(1:N)', tanh(1:N)'] + 0.1*randn(N,3);
+% N     = 1000;
+% X     = [sin(1:N)', cos(1:N)', tanh(1:N)'] + 0.1*randn(N,3);
 % Y     = sin(1:N)';
-Y = [sin(1:N)', cos(1:N)', tanh(1:N)'];
-VARIABLES = {'SIN', 'COS', 'TANH'};
+% % Y = [sin(1:N)', cos(1:N)', tanh(1:N)'];
+% VARIABLES = {'SIN', 'COS', 'TANH'};
 
 %% Data 2:
 % load motorcycle.mat
 % Y = y;
 
 %% Data 3:
-% load cloroSeaBAM.mat
-% Xtrain = SamplesT; Ytrain = [LabelsT]; Xtest = SamplesV; Ytest = LabelsV;
+load cloroSeaBAM.mat
+X = [SamplesT;SamplesV];
+Y = [LabelsT;LabelsV];
 
 %% Data 4:
 % data = load('J_SPARC_one_day.txt');
@@ -233,14 +234,14 @@ if 1
     Xtest  = X(r(ntrain+1:end),:);   % test set
     Ytest  = Y(r(ntrain+1:end),:);   % observed test variable
 end
-ntest = size(Ytest,1);
+[ntest do] = size(Ytest)
 
 %% Remove the mean of Y for training only
 my      = mean(Ytrain);
 Ytrain  = Ytrain - repmat(my,ntrain,1);
 
 %% SELECT METHODS FOR COMPARISON
-METHODS = {'KRR'} 
+% METHODS = {'KRR'}
 % METHODS = {'RLR' 'LASSO' 'ENET'} % LINEAR
 % METHODS = {'LWP' 'ARES'} % SPLINES
 % METHODS = {'KNNR' 'WKNNR'} % NEIGHBORS
@@ -248,13 +249,25 @@ METHODS = {'KRR'}
 % METHODS = {'NN' 'RBFNET' 'ELM'}  % NEURAL NETS
 % METHODS = {'SVR' 'KRR' 'RVM' 'KSNR' 'SKRRrbf' 'SKRRlin' 'RKS'}   % KERNELS
 % METHODS = {'KRR' 'SKRRrbf' 'SKRRlin'}   % KERNELS
-% METHODS = {'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'}  % GPs  
+% METHODS = {'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'}  % GPs
 
 %%%% ALL!
-% METHODS = {'RLR' 'LASSO' 'ENET' 'LWP'  'ARES' 'KNNR' 'WKNNR', ...  % 
-%     'TREE' 'BAGTREE' 'BOOST' 'RF1' 'RF2', ...
-%     'NN' 'ELM', 'SVR' 'KRR' 'RVM' 'KSNR' 'SKRRrbf' 'SKRRlin' 'RKS', ...
-%     'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'} 
+%  METHODS = {'RLR' 'LASSO' 'ENET' 'LWP'  'ARES' 'KNNR' 'WKNNR', ...
+%      'TREE' 'BAGTREE' 'BOOST' 'RF1' 'RF2', ...
+%      'NN' 'ELM', 'SVR' 'KRR' 'RVM' 'KSNR' 'SKRRrbf' 'SKRRlin' 'RKS', ...
+%      'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'}
+
+%%%% REPRESENTATIUS PER FAMILIA
+%  METHODS = {'RLR' 'LASSO' ,...
+%             'LWP' 'ARES', ...
+%             'KNNR', ...
+%             'TREE' 'RF1', ...
+%             'NN', ...
+%             'SVR' 'KRR', ...
+%             'GPR' 'VHGPR' 'WGPR' 'TGP'}
+
+%%%% MULTIOUTPUT
+METHODS = {'RLR' 'NN' 'KRR' 'KSNR' 'SKRRrbf' 'SKRRlin' 'RKS' 'TGP'}
 
 %% TRAIN ALL MODELS
 numModels = numel(METHODS);
@@ -265,16 +278,20 @@ for m=1:numModels
     t=cputime;
     eval(['model = train' METHODS{m} '(Xtrain,Ytrain);']); % Train the model
     eval(['Yp = test' METHODS{m} '(model,Xtest);']);       % Test the model
-    Ypred     = Yp + repmat(my,ntest,1);
-    results(m) = norm(Ytest-Ypred,'fro');
-%     results(m)     = assessment(Ypred(:,m),Ytest,'regress');   
+    
+    if do==1
+        Ypred(:,m)     = Yp + repmat(my,ntest,1);
+        results(m)     = assessment(Ypred(:,m),Ytest,'regress');
+    else    % IF MO:
+        Ypred      = Yp + repmat(my,ntest,1);
+        results(m) = norm(Ytest-Ypred,'fro');
+    end
+    
     CPUTIMES(m) = cputime-t;
 end
 
 results
 CPUTIMES
-
-break
 
 % % Fast training (divide and conquer strategy, nice for kernel machines)
 % for m=1:numModels
@@ -283,7 +300,7 @@ break
 %     eval(['model2 = fastTrain(''' METHODS{m} ''',Xtrain,Ytrain);']); % fast Train the model
 %     eval(['Yp = fastTest(''' METHODS{m} ''',model2,Xtest);']);       % fast Test the model
 %     Ypred(:,m)     = Yp + my;
-%     results2(m)     = assessment(Ypred(:,m),Ytest,'regress');   
+%     results2(m)     = assessment(Ypred(:,m),Ytest,'regress');
 %     CPUTIMES2(m) = cputime-t;
 % end
 
@@ -311,7 +328,7 @@ xlabel('CPU Time [s]')
 ylabel('Methods')
 grid
 
-
+break
 %% THE ERROR BOXPLOTS
 figure,
 ERRORS = Ypred - repmat(Ytest,1,size(Ypred,2));

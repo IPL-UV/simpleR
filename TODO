@@ -21,6 +21,7 @@ FEATURE RANKING
   - rf feature ranking
   - GPs: ARD and SA
   - All: permutation! 
+  - sensitivity analysis in kernel methods
 
 CONFIDENCE INTERVALS  
   - confidence intervals? 
@@ -36,3 +37,4 @@ MISC
    - 1D problems do not work!
    - Cleanup folders, remove duplicated functions, remove unused functions ---> check dependencies
    - Data normalization and scaling!
+
