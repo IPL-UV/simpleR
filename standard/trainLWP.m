@@ -10,7 +10,7 @@ Xtest = X(r(ntrain+1:end),:);
 Ytest = Y(r(ntrain+1:end),:);
 
 ALPHAS = logspace(-3,2,10);
-ORDERS = 1:10;
+ORDERS = 1:5;
 
 m=0;
 for p=ORDERS
@@ -23,7 +23,7 @@ end
 
 [val idx] = min(results(:,3)); 
 model.MSE = results(idx,3);
-model.p = results(idx,1);
+model.p   = results(idx,1);
 model.alpha = results(idx,2);
 model.X = Xtrain;
 model.Y = Ytrain;

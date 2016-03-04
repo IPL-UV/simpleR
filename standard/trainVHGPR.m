@@ -34,7 +34,7 @@ SignalPower = var(y_tr,1);
 NoisePower = SignalPower/4;
 lengthscales=log((max(x_tr)-min(x_tr))'/2);
 
-display('  - Running standard, homoscedastic GP...')
+% display('  - Running standard, homoscedastic GP...')
 loghyperGP = [lengthscales; 0.5*log(SignalPower); 0.5*log(NoisePower);-0.5*log(max(SignalPower/20,meanp^2))];
 loghyperGP = minimize(loghyperGP, 'gpr', 40, {'covSum', {'covSEardj','covNoise','covConst'}}, x_tr, y_tr);
 
@@ -51,10 +51,10 @@ mu0 = log(NoisePower)-sn2/2-2;
 loghyperSignal = [0; 0.5*log(SignalPower);-0.5*log(ConstPower)];
 loghyperNoise =  [0; 0.5*log(sn2); 0.5*log(sn2*0.25)];
 
-display('  - Initializing VHGPR (keeping hyperparameters fixed)...')
+% display('  - Initializing VHGPR (keeping hyperparameters fixed)...')
 LambdaTheta = [log(0.5)*ones(n,1);loghyperSignal;loghyperNoise;mu0];
 [LambdaTheta, convergence0] = minimize(LambdaTheta, 'vhgpr', 30, covfuncSignal, covfuncNoise, 2, x_tr, y_tr);
-display('  - Running VHGPR...')
+% display('  - Running VHGPR...')
 [LambdaTheta, convergence] = minimize(LambdaTheta, 'vhgpr', iter, covfuncSignal, covfuncNoise, 0, x_tr, y_tr);
 convergence = [convergence0; convergence];
 

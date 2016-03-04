@@ -9,6 +9,6 @@ for b=1:maxBasis
 end
 [val bestBasis] = min(MSE);
 params = aresparams(bestBasis, [], [], [], [], 2);
-model_ARES.model  = aresbuild(X, Y, params);
+model_ARES.model  = aresbuild(X, Y, params,[],[],0);
 model_ARES.bestBasis = bestBasis;
 model_ARES.vfold = vfold;
