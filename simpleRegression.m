@@ -3,7 +3,7 @@
 %
 % [simpleR 3.0] 
 %        Version: 3.0
-%        Date   : 15-Mar-2016
+%        Date   : 15-May-2016
 %
 % This demo shows the training and testing of several state-of-the-art 
 % statistical models for regression. Please read the README file for more 
@@ -117,6 +117,7 @@ Ytrain = Y(r(1:ntrain),:);       % observed training variable
 Xtest  = X(r(ntrain+1:end),:);   % test set
 Ytest  = Y(r(ntrain+1:end),:);   % observed test variable
 [ntest do] = size(Ytest);
+VARIABLES = {'b1' 'b2' 'b3' 'b4' 'b5'};
 
 %% Input data normalization, either between 0-1 or standardization (zero mean, unit variance)
 % [Xtrain a b] = scale(Xtrain);
@@ -145,7 +146,7 @@ METHODS = {'RLR' 'LASSO' 'ENET' 'LWP' 'ARES' 'KNNR' 'WKNNR', ...
     'NN' 'ELM', 'SVR' 'KRR' 'RVM' 'KSNR' 'SKRRrbf' 'SKRRlin' 'RKS', ...
     'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'}
 
-%%%% REPRESENTATIUS PER FAMILIA
+%%%% REPRESENTATIVE PER FAMILY
 %  METHODS = {'RLR' 'LASSO' ,...
 %             'LWP' 'ARES', ...
 %             'KNNR', ...
@@ -154,13 +155,12 @@ METHODS = {'RLR' 'LASSO' 'ENET' 'LWP' 'ARES' 'KNNR' 'WKNNR', ...
 %             'SVR' 'KRR', ...
 %             'GPR' 'VHGPR' 'WGPR' 'TGP'}
 
-%%%% MULTIOUTPUT
+%%%% MULTIOUTPUT ONLY
 % METHODS = {'RLR' 'NN' 'KRR' 'KSNR' 'SKRRrbf' 'SKRRlin' 'RKS' 'TGP'}
 
 %% TRAIN ALL MODELS
 numModels = numel(METHODS);
 
-% One model (very costly for kernel methods!)
 for m=1:numModels
     fprintf(['Training ' METHODS{m} '... \n'])
     t=cputime;
@@ -173,7 +173,6 @@ for m=1:numModels
     YPREDS(:,m) = Yp;
 end
 
-
 % % Fast training (divide and conquer strategy, nice for kernel machines)
 % for m=1:numModels
 %     fprintf(['Fast Training ' METHODS{m} '... \n'])
@@ -185,10 +184,5 @@ end
 %     CPUTIMES2(m) = cputime-t;
 % end
 
-
-
 %% Save results
-save('RESULTS/results.mat','RESULTS','CPUTIMES','MODELS','METHODS','Xtrain','Ytrain','Xtest','Ytest','YPREDS')
-
-%% Plot results
-
+save('RESULTS/results.mat','RESULTS','CPUTIMES','MODELS','METHODS','VARIABLES','X','Y','Xtrain','Ytrain','Xtest','Ytest','YPREDS')

@@ -1,42 +1,78 @@
-%% RANKING FEATURES with DIFFERENT METHODS
+%
+% Analysis of the models stored in RESULTS/results.mat
+% 
+% Gustau Camps-Valls, 2016(c)
+% gustau.camps@uv.es
+%
+
+clear;clc;close all;
+
+%% SETUP of FIGURES
+fontname = 'AvantGarde';
+fontsize = 16;
+fontunits = 'points';
+set(0,'DefaultAxesFontName',fontname,'DefaultAxesFontSize',fontsize,'DefaultAxesFontUnits',fontunits,...
+    'DefaultTextFontName',fontname,'DefaultTextFontSize',fontsize,'DefaultTextFontUnits',fontunits,...
+    'DefaultLineLineWidth',2,'DefaultLineMarkerSize',10,'DefaultLineColor',[0 0 0]);
+
+rand('seed',1234)
+randn('seed',1234)
+
+%% LOAD RESULTS
+load('RESULTS/results.mat')
 
 d = size(Xtest,2);
 
-% LR
-figure, bar(model_RLR.W(2:end)), set(gca,'Xtick',1:d,'XtickLabel',VARIABLES)
-grid,title('LR Feature relevance.')
+numMethods = length(METHODS);
+for m = 1:numMethods
+    model = MODELS{m};
 
-% LASSO
+    % 1- feature ranking with a permutation analysis
+    prank = permutation(METHODS{m},model,Xtest,Ytest);
+    MRANK(m,:) = mean(prank);
+    SRANK(m,:) = std(prank);
 
-% Display the weights
-figure, bar(model_LASSO.W), set(gca,'Xtick',1:d,'XtickLabel',VARIABLES)
-grid,title('LASSO Feature relevance.')
+    % 2- Partial plots
+    [XPLOTS(m,:,:) PPLOTS(m,:,:)] = partialplots(METHODS{m},model,Xtest);
+    
+end
 
-% Display a trace plot of the lasso fits.
-axTrace = lassoPlot(model_LASSO.B,model_LASSO.S);
+%% Permutation analysis 
+figure,
+bar(MRANK)
+ylabel('Relevance'),xlabel('Methods')
+title('RMSE Permutation analysis')
+set(gca,'XtickLabel',METHODS)
+grid
 
-% Display the sequence of cross-validated predictive MSEs.
-axCV = lassoPlot(model_LASSO.B,model_LASSO.S,'PlotType','CV');
+%% Partial plots for all methods
+% figure,
+% g = round(sqrt(d));
+% for i=1:d
+%     for m=1:numMethods
+%         subplot(g,g,i),
+%         plot(squeeze(XPLOTS(m,i,:)),squeeze(PPLOTS(m,i,:)),'color',[1/m,0,0])
+%         hold on,
+%         ylabel('\Delta y'),
+%         xlabel(VARIABLES{i})
+%         grid
+%         drawnow
+%     end
+% end
+% legend(METHODS)
 
-% ELASTICNET
-figure, bar(model_ElasticNet.W), set(gca,'Xtick',1:d,'XtickLabel',VARIABLES)
-grid,title('ELASTIC NET Feature relevance.')
+%% Partial plots for the first model only
 
-% Display a trace plot of the lasso fits.
-axTrace = lassoPlot(model_ElasticNet.B,model_ElasticNet.S);
-
-% Display the sequence of cross-validated predictive MSEs.
-axCV = lassoPlot(model_ElasticNet.B,model_ElasticNet.S,'PlotType','CV');
-
-% TREE
-view(model_TREE)
-figure, bar(varimportance(model_TREE)), set(gca,'Xtick',1:d,'XtickLabel',VARIABLES)
-grid,title('TREE Feature relevance.')
-
-% GPR
-figure, bar(1./exp(model_GP.loghyper(1:d))), set(gca,'Xtick',1:d,'XtickLabel',VARIABLES)
-grid,title('GPR Feature relevance.')
-
-% VHGPR
-figure, bar(1./exp(model_VHGP.loghyper(1:d))), set(gca,'Xtick',1:d,'XtickLabel',VARIABLES)
-grid,title('VHGPR Feature relevance.')
+figure,
+g = round(sqrt(d));
+for i=1:d
+    for m=1%:numMethods
+        subplot(g,g,i),
+        plot(squeeze(XPLOTS(m,i,:)),squeeze(PPLOTS(m,i,:)),'color',[1/m,0,0])
+        hold on,
+        ylabel('\Delta y'),
+        xlabel(VARIABLES{i})
+        grid
+        drawnow
+    end
+end
