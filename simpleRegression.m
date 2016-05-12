@@ -80,7 +80,7 @@ set(0,'DefaultAxesFontName',fontname,'DefaultAxesFontSize',fontsize,'DefaultAxes
     'DefaultLineLineWidth',3,'DefaultLineMarkerSize',10,'DefaultLineColor',[0 0 0]);
 
 % Paths
-addpath('./AUX')        % Auxiliary functions for visualization, results analysis, plots, etc.
+addpath('./AUXF')       % Auxiliary functions for visualization, results analysis, plots, etc.
 addpath('./DATA')       % Put your data here
 addpath('./FIGURES')    % All figures are saved here
 addpath('./RESULTS')    % All files with results are saved here
