@@ -1,5 +1,7 @@
 function model = trainELM(X,Y)
 
+[N,di] = size(X);
+
 % Set to non-zero to use it (for instance, vfold = 4)
 vfold = 0;
 
@@ -11,16 +13,12 @@ Ntrain = round(size(Y,1) * 0.66);
 % Training
 Xtrain = X(r(1:Ntrain),:);
 Ytrain = Y(r(1:Ntrain),:);
+Ntrain = size(Xtrain,1);
 
 % Validation
 Xvalid = X(r((Ntrain+1):end),:);
 Yvalid = Y(r((Ntrain+1):end),:);
-
-maxim = max(Y);
-minim = min(Y);
-Y = (Y-minim)/(maxim-minim)*2-1;
-Ytrain = (Ytrain-minim)/(maxim-minim)*2-1;
-Yvalid = (Yvalid-minim)/(maxim-minim)*2-1;
+Nvalid = size(Xvalid,1);
 
 % Row-wise
 X = X';
@@ -30,11 +28,9 @@ Xvalid = Xvalid';
 Ytrain = Ytrain';
 Yvalid = Yvalid';
 
-[di,N]      = size(X);
-[di,Ntrain] = size(Xtrain);
-[di,Nvalid] = size(Xvalid);
+NHmax = min(Ntrain,3000);
 c=0;
-for h = 1:Ntrain;
+for h = 1:NHmax;
     
     % Build and train the net:
     W1  = rand(h,di)*2-1;
@@ -43,31 +39,28 @@ for h = 1:Ntrain;
     ind = ones(1,Ntrain);
     B   = BH(:,ind);
     tempH = tempH+B;
-    H  = 1./(1 + exp(-tempH));
-    for lambda=logspace(-20,0,20);
+    H  = tempH;
+    for lambda=logspace(-10,0,20);
         c=c+1;
     %     W2 = pinv(H') * Ytrain';
         W2 = (lambda*eye(size(H,1)) + H * H') \ H * Ytrain'; % regularized
         Ypred = (H' * W2)';
-        r = assessment(Ytrain,Ypred, 'regress');
-        RMSE1 = r.RMSE;
+        RMSEtr = mean(sqrt(mean((Ytrain'-Ypred').^2)));
         
         % Validation
         tempH = W1*Xvalid;
         ind   = ones(1,Nvalid);
         B2    = BH(:,ind);
-        tempH = tempH+B2;
-        Hvalid = 1./(1 + exp(-tempH));
+        Hvalid = tempH+B2;
         Ypredvalid = (Hvalid' * W2)';
-        r = assessment(Yvalid,Ypredvalid, 'regress');
-        RMSE = r.RMSE;
-        results(c,:) = [h lambda RMSE1 RMSE];
+        RMSEval = mean(sqrt(mean((Yvalid'-Ypredvalid').^2)));
+        results(c,:) = [h lambda RMSEtr RMSEval];
     end
     
 end
 
 % Optimal structure in xval
-% figure, semilogy(RMSE1,'b'),hold on, semilogy(RMSE,'r')
+% figure, semilogy(results(:,3),'b'),hold on, semilogy(results(:,4),'r')
 [val idx] = min(results(:,4));
 h      = results(idx,1);
 lambda = results(idx,2);
@@ -78,22 +71,16 @@ BH    = rand(h,1);
 tempH = W1*X;
 ind   = ones(1,N);
 B     = BH(:,ind);
-tempH = tempH+B;
-H     = 1./(1 + exp(-tempH));
+H     = tempH+B;
 % W2    = pinv(H') * Y';
 W2 = (lambda*eye(size(H,1)) + H * H') \ H * Y'; % regularized
-Ypred = (H' * W2)';
-Ypred = 0.5*(Ypred + 1)*(maxim-minim) + minim;
+% Ypred = H' * W2;
 
 % The model
 model.hopt = h;
 model.W1 = W1;
 model.W2 = W2;
 model.BH = BH;
-model.maxim = maxim;
-model.minim = minim;
 
 % r = assessment(Ytest,Ypredtest, 'regress');
 % figure,plot(Ytest,Ypredtest,'k.')
-
-

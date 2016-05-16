@@ -31,8 +31,8 @@ end
 nout = size(Y1,2);
 
 method  = 'trainlm';
-epochs  = 100;
-neurons = 2:2:30;
+epochs  = 200;
+neurons = 1:30;
 
 newnet = @newff;
 
@@ -43,7 +43,7 @@ redes = cell(1,numel(neurons));
 RMSEs = zeros(1,numel(neurons));
 for nh = neurons
     
-    k = k +1;
+    k = k+1;
     
     net = newnet(limits, [nh nout], {'tansig', 'purelin'}, method); % 1 hidden layer
 
@@ -56,11 +56,11 @@ for nh = neurons
         % Train
         net = train(net,X1',Y1',[],[],VV,[]);    
         % Save network
-        redes{nh} = net;
+        redes{k} = net;
         % Simulate and save results for the VALIDATION set
         PredictV = sim(net,X2');
         % RMSE
-        RMSEs(k) = mean(sqrt(mean((Y2'-PredictV).^2)));
+        RMSEs(k) = mean(sqrt(mean((Y2-PredictV').^2)));
     else
         indices = crossvalind('kfold', size(X1,1), vfold);
         vf_RMSE = zeros(1,vfold);
@@ -70,7 +70,7 @@ for nh = neurons
            warning('matlab:warning', 'Must each net be re-initialized?')
            net = train(net,X1(trainind,:)',Y1(trainind,:)',[],[],VV,[]);
            YP = sim(net,X2');
-           vf_RMSE(i) = mean(sqrt(mean((Y2'-YP).^2)));
+           vf_RMSE(i) = mean(sqrt(mean((Y2-YP').^2)));
         end
         % RMSE
         RMSEs(k) = mean(vf_RMSE);
@@ -80,8 +80,7 @@ end
 
 % Select the best network structure (minimum validation error):
 [val,idx] = min(RMSEs);
-bestnet = neurons(idx);
-net = redes{bestnet}; % best network
+net       = redes{idx}; % best network
 
 % We are already near to the optimal: refine a little bit more using all data
 net.trainParam.epochs = 10; % There is no further validation set, fix number of epochs

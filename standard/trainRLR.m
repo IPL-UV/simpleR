@@ -19,7 +19,7 @@ res = Inf;
 for lg = 1:numel(gamma)
     W = (Ctrain + gamma(lg)*eye(d))\(Xtrain'*Ytrain);
     Ypred = Xtest*W;
-    res(lg) = mean((Ytest-Ypred).^2);
+    res(lg) = mean(sqrt(mean((Ytest-Ypred).^2)));
 end
 % figure,semilogx(gamma,res,'ko-'), grid
 
@@ -28,3 +28,4 @@ bestgamma = gamma(idx);
 W = (X'*X + bestgamma*eye(d))\(X'*Y);
 model.W = W;
 model.gamma = bestgamma;
+

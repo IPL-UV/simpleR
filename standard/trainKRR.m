@@ -38,11 +38,8 @@ for ls = 1:numel(sigma)
         yp = Kv * alpha;
 
         % Error        
-        if outdim>1
-            res = norm(Ytest-yp,'fro');
-        else
-            res = mean( sqrt(mean((Ytest-yp).^2)) );
-        end
+        res = mean(sqrt(mean((Ytest-yp).^2)));
+
         if res < rmse
             model.sigma = sigma(ls);
             model.gamma = gamma(lg);
