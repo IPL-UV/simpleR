@@ -102,7 +102,10 @@ addpath('./TGP')        % Twin Gaussian Process (TGP) [Liefeng Bo and Cristian S
 %   n: number of samples/examples/patterns (in rows)
 %   d: input data dimensionality/features (in columns)
 %   do: output data dimensionality (variables, observations). 
-load SeaBAM.mat
+% load SeaBAM.mat
+
+X = [sin(1:100)', randn(100,1), rand(100,1)]; 
+Y = sin(1:100)' + 0.1*randn(100,1);
 
 %% Split training-testing data
 rate = 0.05; %[0.05 0.1 0.2 0.3 0.4 0.5 0.6]
@@ -141,10 +144,12 @@ Ytrain  = Ytrain - repmat(my,ntrain,1);
 % METHODS = {'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'}  % GPs
 
 %%%% ALL!
-METHODS = {'RLR' 'LASSO' 'ENET' 'LWP' 'ARES' 'KNNR' 'WKNNR', ...
-    'TREE' 'BAGTREE' 'BOOST' 'RF1' 'RF2', ...
-    'NN' 'ELM', 'SVR' 'KRR' 'RVM' 'KSNR' 'SKRRrbf' 'SKRRlin' 'RKS', ...
-    'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'}
+% METHODS = {'RLR' 'LASSO' 'ENET' 'LWP' 'ARES' 'KNNR' 'WKNNR', ...
+%     'TREE' 'BAGTREE' 'BOOST' 'RF1' 'RF2', ...
+%     'NN' 'ELM', 'SVR' 'KRR' 'RVM' 'KSNR' 'SKRRrbf' 'SKRRlin' 'RKS', ...
+%     'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'}
+
+METHODS = {'GPR'}
 
 %%%% REPRESENTATIVE PER FAMILY
 %  METHODS = {'RLR' 'LASSO' ,...
