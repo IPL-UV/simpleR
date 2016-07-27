@@ -23,7 +23,7 @@ if vfold == 0
     VV.P = X2';
     VV.T = Y2';
 else
-    error('vfold not tested: comment line this and use at your own risk')
+    error('vfold not tested: comment this line and use at your own risk')
 end
 
 % [nin  nsam] = size(X1');
@@ -43,7 +43,7 @@ redes = cell(1,numel(neurons));
 RMSEs = zeros(1,numel(neurons));
 for nh = neurons
     
-    k = k+1;
+    k = k + 1;
     
     net = newnet(limits, [nh nout], {'tansig', 'purelin'}, method); % 1 hidden layer
 
@@ -79,8 +79,8 @@ for nh = neurons
 end
 
 % Select the best network structure (minimum validation error):
-[val,idx] = min(RMSEs);
-net       = redes{idx}; % best network
+[~,idx] = min(RMSEs);
+net     = redes{idx}; % best network
 
 % We are already near to the optimal: refine a little bit more using all data
 net.trainParam.epochs = 10; % There is no further validation set, fix number of epochs
