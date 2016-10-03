@@ -1,4 +1,4 @@
-function [yt,sd] = testRF(model,xt)
+function [yt,sd] = testRF2(model,xt)
 
 % function y = testRF(model,xt)
 %
