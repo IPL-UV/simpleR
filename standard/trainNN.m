@@ -19,24 +19,24 @@ Y2 = Y(r((Ntrain+1):end),:);
 % From 'help train'
 % 'The validation vectors are used to stop training early if further training on
 %  the primary vectors will hurt generalization to the validation vectors'
-if vfold == 0
-    VV.P = X2';
-    VV.T = Y2';
-else
-    error('vfold not tested: comment this line and use at your own risk')
-end
+% if vfold == 0
+%     VV.P = X2';
+%     VV.T = Y2';
+% else
+%     error('vfold not tested: comment this line and use at your own risk')
+% end
 
 % [nin  nsam] = size(X1');
 % [nout nsam] = size(Y1');
-nout = size(Y1,2);
+% nout = size(Y1,2);
 
 method  = 'trainlm';
 epochs  = 200;
 neurons = 1:30;
 
-newnet = @newff;
+% newnet = @newff;
 
-limits = [min(X1); max(X1)]';
+% limits = [min(X1); max(X1)]';
 
 k = 0;
 redes = cell(1,numel(neurons));
@@ -45,22 +45,24 @@ for nh = neurons
     
     k = k + 1;
     
-    net = newnet(limits, [nh nout], {'tansig', 'purelin'}, method); % 1 hidden layer
+    %net = newnet(limits, [nh nout], {'tansig', 'purelin'}, method); % 1 hidden layer
+    net = fitnet(nh, method);
 
     % Do not display anything
-    net.trainParam.show = NaN;
+    %net.trainParam.show = NaN;
     net.trainParam.showWindow = false;
     net.trainParam.epochs = epochs;
   
     if vfold == 0
         % Train
-        net = train(net,X1',Y1',[],[],VV,[]);    
+        net = train(net, X1', Y1', 'useParallel', 'true'); %,[],[],VV,[]);
         % Save network
         redes{k} = net;
         % Simulate and save results for the VALIDATION set
-        PredictV = sim(net,X2');
+        %PredictV = sim(net,X2');
         % RMSE
-        RMSEs(k) = mean(sqrt(mean((Y2-PredictV').^2)));
+        %RMSEs(k) = mean(sqrt(mean((Y2-PredictV').^2)));
+        RMSEs(k) = sqrt( perform(net, X2', Y2') );
     else
         indices = crossvalind('kfold', size(X1,1), vfold);
         vf_RMSE = zeros(1,vfold);
