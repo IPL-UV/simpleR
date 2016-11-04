@@ -59,10 +59,11 @@ for nh = neurons
         % Save network
         redes{k} = net;
         % Simulate and save results for the VALIDATION set
-        %PredictV = sim(net,X2');
+        PredictV = sim(net,X2');
         % RMSE
-        %RMSEs(k) = mean(sqrt(mean((Y2-PredictV').^2)));
-        RMSEs(k) = sqrt( perform(net, X2', Y2') );
+        RMSEs(k) = mean(sqrt(mean((Y2-PredictV').^2)));
+        # MATLAB's perform function does not return MSE for multi-output vars
+        #RMSEs(k) = sqrt( perform(net, X2', Y2') );
     else
         indices = crossvalind('kfold', size(X1,1), vfold);
         vf_RMSE = zeros(1,vfold);
