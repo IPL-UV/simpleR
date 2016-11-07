@@ -110,8 +110,9 @@ Y = sin(1:100)' + 0.1*randn(100,1);
 %% Split training-testing data
 rate = 0.05; %[0.05 0.1 0.2 0.3 0.4 0.5 0.6]
 % Fix seed random generator (important: disable when doing the 100 realizations loop!)
-rand('seed',12345);
-randn('seed',12345);
+% rand('seed',12345);
+% randn('seed',12345);
+% rng(0);
 [n d] = size(X);                 % samples x bands
 r = randperm(n);                 % random index
 ntrain = round(rate*n);          % #training samples
@@ -149,7 +150,7 @@ Ytrain  = Ytrain - repmat(my,ntrain,1);
 %     'NN' 'ELM', 'SVR' 'KRR' 'RVM' 'KSNR' 'SKRRrbf' 'SKRRlin' 'RKS', ...
 %     'GPR' 'VHGPR' 'WGPR' 'SSGPR' 'TGP'}
 
-METHODS = {'GPR'}
+METHODS = {'SVR'}
 
 %%%% REPRESENTATIVE PER FAMILY
 %  METHODS = {'RLR' 'LASSO' ,...
@@ -172,8 +173,8 @@ for m=1:numModels
     eval(['model = train' METHODS{m} '(Xtrain,Ytrain);']); % Train the model
     eval(['Yp = test' METHODS{m} '(model,Xtest);']);       % Test the model
     Yp = Yp + repmat(my,ntest,1);
-    RESULTS(m) = assessregres(Ytest,Yp);
-    CPUTIMES(m) = cputime-t;
+    RESULTS(m) = assessment(Ytest, Yp, 'regress')  % assessregres(Ytest,Yp);
+    CPUTIMES(m) = cputime - t;
     MODELS{m} = model;
     YPREDS(:,m) = Yp;
 end
