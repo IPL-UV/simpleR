@@ -4,7 +4,6 @@ function model = trainNN(X,Y)
 vfold = 0;
 
 % Cross validation
-rand('seed',0)
 r = randperm(size(Y,1)); % random index
 Ntrain = round(size(Y,1) * 0.66);
 
@@ -42,9 +41,9 @@ k = 0;
 redes = cell(1,numel(neurons));
 RMSEs = zeros(1,numel(neurons));
 for nh = neurons
-    
+
     k = k + 1;
-    
+
     %net = newnet(limits, [nh nout], {'tansig', 'purelin'}, method); % 1 hidden layer
     net = fitnet(nh, method);
 
@@ -52,18 +51,18 @@ for nh = neurons
     %net.trainParam.show = NaN;
     net.trainParam.showWindow = false;
     net.trainParam.epochs = epochs;
-  
+
     if vfold == 0
         % Train
-        net = train(net, X1', Y1', 'useParallel', 'true'); %,[],[],VV,[]);
+        net = train(net, X1', Y1', 'useParallel', 'yes', 'useGPU', 'yes'); %,[],[],VV,[]);
         % Save network
         redes{k} = net;
         % Simulate and save results for the VALIDATION set
         PredictV = sim(net,X2');
         % RMSE
         RMSEs(k) = mean(sqrt(mean((Y2-PredictV').^2)));
-        # MATLAB's perform function does not return MSE for multi-output vars
-        #RMSEs(k) = sqrt( perform(net, X2', Y2') );
+        % MATLAB's perform function does not return MSE for multi-output vars
+        % RMSEs(k) = sqrt( perform(net, X2', Y2') );
     else
         indices = crossvalind('kfold', size(X1,1), vfold);
         vf_RMSE = zeros(1,vfold);
