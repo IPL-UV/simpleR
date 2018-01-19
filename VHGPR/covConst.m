@@ -1,4 +1,4 @@
-function [A, B] = covConst(logtheta, x, z);
+function [A, B] = covConst(logtheta, x, ~)
 
 % covariance function for a constant function. The covariance function is
 % parameterized as:
@@ -18,11 +18,11 @@ if nargin == 0, A = '1'; return; end              % report number of parameters
 is2 = exp(-2*logtheta);                                            % s2 inverse
 
 if nargin == 2
-  A = is2;
+    A = is2;
 elseif nargout == 2                              % compute test set covariances
-  A = is2;
-  B = is2;
+    A = is2;
+    B = is2;
 else                                                % compute derivative matrix
-  A = -2*is2*ones(size(x,1));
+    A = -2*is2*ones(size(x,1));
 end
 

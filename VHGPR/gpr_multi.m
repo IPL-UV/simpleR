@@ -1,4 +1,4 @@
-function [out1, out2] = gpr(logtheta, covfunc, x, y, xstar)
+function [out1, out2] = gpr_multi(logtheta, covfunc, x, y, xstar)
 
 % gpr - Gaussian process regression, with a named covariance function. Two
 % modes are possible: training and prediction: if no test data are given, the
@@ -31,37 +31,42 @@ function [out1, out2] = gpr(logtheta, covfunc, x, y, xstar)
 % (C) copyright 2006 by Carl Edward Rasmussen (2006-03-20).
 
 if ischar(covfunc), covfunc = cellstr(covfunc); end % convert to cell if needed
-[n,D] = size(x); %#ok<NASGU>
+[n,D] = size(x);  %#ok<NASGU>
 if eval(feval(covfunc{:})) ~= size(logtheta, 1)
     error('Error: Number of parameters do not agree with covariance function')
 end
 
-K = feval(covfunc{:}, logtheta, x);    % compute training set covariance matrix
+K = feval(covfunc{:}, logtheta, x);  % compute training set covariance matrix
 
 L = chol(K)';                        % cholesky factorization of the covariance
 alpha = L'\(L\y);
 
 if nargin == 4 % if no test cases, compute the negative log marginal likelihood
-    
-    out1 = 0.5*y'*alpha + sum(log(diag(L))) + 0.5*n*log(2*pi);
-    
-    if nargout == 2               % ... and if requested, its partial derivatives
-        out2 = zeros(size(logtheta));       % set the size of the derivative vector
-        W = L'\(L\eye(n))-alpha*alpha';                % precompute for convenience
-        for i = 1:length(out2)
-            out2(i) = sum(sum(W.*feval(covfunc{:}, logtheta, x, i)))/2;
+
+    % Assuming MSE cost function for the log likelihoods
+    out1 = sum( (0.5*diag(y'*alpha) + sum(log(diag(L))) + 0.5*n*log(2*pi)).^2 );
+
+    if nargout == 2                     % ... and if requested, its partial derivatives
+        out2 = zeros(length(logtheta), size(alpha,2));  % set the size of the derivative vector
+        Wp = L' \ (L \ eye(n));                         % precompute for convenience
+        for d = 1:size(alpha,2)
+            W = Wp - alpha(:,d) * alpha(:,d)';          % precompute for convenience
+            for i = 1:length(out2)
+                out2(i,d) = sum(sum(W .* feval(covfunc{:}, logtheta, x, i))) / 2;
+            end
         end
+        out2 = 2 * sum(out2,2);
     end
-    
+
 else                    % ... otherwise compute (marginal) test predictions ...
-    
-    [Kss, Kstar] = feval(covfunc{:}, logtheta, x, xstar);     %  test covariances
-    
-    out1 = Kstar' * alpha;                                      % predicted means
-    
+
+    [Kss, Kstar] = feval(covfunc{:}, logtheta, x, xstar);     % test covariances
+
+    out1 = Kstar' * alpha;                                    % predicted means
+
     if nargout == 2
-        v = L\Kstar;
+        v = L \ Kstar;
         out2 = Kss - sum(v.*v)';
     end
-    
+
 end

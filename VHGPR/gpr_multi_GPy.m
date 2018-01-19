@@ -1,4 +1,6 @@
-function [out1, out2] = gpr(logtheta, covfunc, x, y, xstar)
+function [out1, out2] = gpr_multi_sl(logtheta, covfunc, x, y, xstar)
+
+% This version implements multioutput as in Python's GPy library.
 
 % gpr - Gaussian process regression, with a named covariance function. Two
 % modes are possible: training and prediction: if no test data are given, the
@@ -31,37 +33,45 @@ function [out1, out2] = gpr(logtheta, covfunc, x, y, xstar)
 % (C) copyright 2006 by Carl Edward Rasmussen (2006-03-20).
 
 if ischar(covfunc), covfunc = cellstr(covfunc); end % convert to cell if needed
-[n,D] = size(x); %#ok<NASGU>
+[n,D] = size(x);  %#ok<NASGU>
 if eval(feval(covfunc{:})) ~= size(logtheta, 1)
     error('Error: Number of parameters do not agree with covariance function')
 end
 
-K = feval(covfunc{:}, logtheta, x);    % compute training set covariance matrix
+K = feval(covfunc{:}, logtheta, x);  % compute training set covariance matrix
 
 L = chol(K)';                        % cholesky factorization of the covariance
 alpha = L'\(L\y);
 
 if nargin == 4 % if no test cases, compute the negative log marginal likelihood
-    
-    out1 = 0.5*y'*alpha + sum(log(diag(L))) + 0.5*n*log(2*pi);
-    
-    if nargout == 2               % ... and if requested, its partial derivatives
-        out2 = zeros(size(logtheta));       % set the size of the derivative vector
-        W = L'\(L\eye(n))-alpha*alpha';                % precompute for convenience
+
+    % Original single-output likelihood
+    % out1 = 0.5*y'*alpha + sum(log(diag(L))) + 0.5*n*log(2*pi);
+    % GPy likelihood
+    outdims = size(y,2);
+    out1 = 0.5 * ( sum(sum(y.*alpha)) + outdims*sum(log(diag(L))) + outdims*n*log(2*pi) );
+
+    % The likelihood partial derivatives are computed similar to the
+    % single-output case, but with these key differences:
+    %   1. alpha has now more than one dimension.
+    %   2. The first term of W is multiplied by the number of output dimensions
+    if nargout == 2                     % ... and if requested, its partial derivatives
+        out2 = zeros(size(logtheta));             % set the size of the derivative vector
+        W = outdims * L' \ (L \ eye(n)) - alpha * alpha';   % precompute for convenience
         for i = 1:length(out2)
-            out2(i) = sum(sum(W.*feval(covfunc{:}, logtheta, x, i)))/2;
+            out2(i) = sum(sum(W .* feval(covfunc{:}, logtheta, x, i))) / 2;
         end
     end
-    
+
 else                    % ... otherwise compute (marginal) test predictions ...
-    
-    [Kss, Kstar] = feval(covfunc{:}, logtheta, x, xstar);     %  test covariances
-    
-    out1 = Kstar' * alpha;                                      % predicted means
-    
+
+    [Kss, Kstar] = feval(covfunc{:}, logtheta, x, xstar);     % test covariances
+
+    out1 = Kstar' * alpha;                                    % predicted means
+
     if nargout == 2
-        v = L\Kstar;
+        v = L \ Kstar;
         out2 = Kss - sum(v.*v)';
     end
-    
+
 end

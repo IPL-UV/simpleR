@@ -2,7 +2,7 @@ function [A, B] = covSEardj(loghyper, x, z)
 
 % jittered version
 
-% Squared Exponential covariance function with Automatic Relevance Detemination
+% Squared Exponential covariance function with Automatic Relevance Determination
 % (ARD) distance measure. The covariance function is parameterized as:
 %
 % k(x^p,x^q) = sf2 * exp(-(x^p - x^q)'*inv(P)*(x^p - x^q)/2)
@@ -32,20 +32,20 @@ ell = exp(loghyper(1:D));                         % characteristic length scale
 sf2 = exp(2*loghyper(D+1));                                   % signal variance
 
 if nargin == 2
-  K = sf2*exp(-sq_dist(diag(1./ell)*x')/2);
-  A = K+sf2*jitter*eye(n);                 
-elseif nargout == 2                              % compute test set covariances
-  A = sf2*(1+jitter)*ones(size(z,1),1);
-  B = sf2*exp(-sq_dist(diag(1./ell)*x',diag(1./ell)*z')/2);
-else                                                % compute derivative matrix
-  if z == 1   
     K = sf2*exp(-sq_dist(diag(1./ell)*x')/2);
-  end
-  if z <= D                                           % length scale parameters
-    A = K.*sq_dist(x(:,z)'/ell(z));  
-  else                                                    % magnitude parameter
-    A = 2*(K+sf2*jitter*eye(n));
-    clear K
-  end
+    A = K+sf2*jitter*eye(n);
+elseif nargout == 2                              % compute test set covariances
+    A = sf2*(1+jitter)*ones(size(z,1),1);
+    B = sf2*exp(-sq_dist(diag(1./ell)*x',diag(1./ell)*z')/2);
+else                                                % compute derivative matrix
+    if z == 1
+        K = sf2*exp(-sq_dist(diag(1./ell)*x')/2);
+    end
+    if z <= D                                           % length scale parameters
+        A = K.*sq_dist(x(:,z)'/ell(z));
+    else                                                    % magnitude parameter
+        A = 2*(K+sf2*jitter*eye(n));
+        clear K
+    end
 end
 

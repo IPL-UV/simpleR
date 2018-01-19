@@ -14,7 +14,7 @@ function [A, B] = covAR1(logtheta, x, z)
 if nargin == 0, A = '2'; return; end              % report number of parameters
 
 phi = tanh(logtheta(1));
-sf2 = exp(2*logtheta(2));    
+sf2 = exp(2*logtheta(2));
 n = size(x,1);
 
 if nargin == 2

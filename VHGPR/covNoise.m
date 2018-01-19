@@ -1,4 +1,4 @@
-function [A, B] = covNoise(logtheta, x, z);
+function [A, B] = covNoise(logtheta, x, ~)
 
 % Independent covariance function, ie "white noise", with specified variance.
 % The covariance function is specified as:
@@ -19,10 +19,10 @@ if nargin == 0, A = '1'; return; end              % report number of parameters
 s2 = exp(2*logtheta);                                          % noise variance
 
 if nargin == 2                                      % compute covariance matrix
-  A = s2*eye(size(x,1));
+    A = s2*eye(size(x,1));
 elseif nargout == 2                              % compute test set covariances
-  A = s2;
-  B = 0;                               % zeros cross covariance by independence
+    A = s2;
+    B = 0;                               % zeros cross covariance by independence
 else                                                % compute derivative matrix
-  A = 2*s2*eye(size(x,1));
+    A = 2*s2*eye(size(x,1));
 end

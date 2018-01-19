@@ -21,7 +21,7 @@ function [nlpdapprox, nlpd] = nlogprob_vhgpr(y_tst, mu, s2, a, c2)
 %
 % See also: vhgpr
 %
-% Copyright (c) 2011 by Miguel Lázaro Gredila
+% Copyright (c) 2011 by Miguel L\'azaro Gredila
 
 Ey = a;
 Vy = c2+exp(mu+s2/2);
@@ -44,10 +44,11 @@ xw = [  0.194840741569	0.375238352593;...
         5.81222594946	1.19734401957E-015;...
         6.40949814928	9.23173653482E-019;...
         7.12581390983	7.31067642754E-023];
-x=[-xw(end:-1:1,1);xw(:,1)];
-w=[xw(end:-1:1,2);xw(:,2)];
+    
+x = [-xw(end:-1:1,1) ; xw(:,1) ];
+w = [ xw(end:-1:1,2) ; xw(:,2) ];
  
-n=size(mu,1);
+n = size(mu,1);
 Ns = length(x);
 samples = mu*ones(1,Ns)+(sqrt(2*s2)*ones(1,Ns)).*(ones(n,1)*x');
 V = c2*ones(1,Ns) + exp(samples);

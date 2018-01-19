@@ -1,6 +1,6 @@
 function model = trainKRR(X,Y)
 
-[n d] = size(X);
+n = size(X,1);
 rate = 0.66;      % Use 2/3 - 1/3 for xvalidation
 ntrain = round(rate*n);
 r = randperm(n);
@@ -9,7 +9,7 @@ Ytrain = Y(r(1:ntrain),:);
 Xtest = X(r(ntrain+1:end),:);
 Ytest = Y(r(ntrain+1:end),:);
 
-[samples outdim] = size(Ytrain);
+% [samples outdim] = size(Ytrain);
 
 meanSigma = mean(pdist(X));
 sigmaMin = log10(meanSigma*0.1);

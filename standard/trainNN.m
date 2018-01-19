@@ -67,9 +67,9 @@ for nh = neurons
         indices = crossvalind('kfold', size(X1,1), vfold);
         vf_RMSE = zeros(1,vfold);
         for i = 1:vfold
-           testind  = (indices == i); trainind = ~test;
+           testind = (indices == i); trainind = ~test;
            VV.P = X1(testind,:)'; VV.T = Y1(testind,:)';
-           warning('matlab:warning', 'Must each net be re-initialized?')
+           warning('matlab:warning', 'Should each net be re-initialized?')
            net = train(net,X1(trainind,:)',Y1(trainind,:)',[],[],VV,[]);
            YP = sim(net,X2');
            vf_RMSE(i) = mean(sqrt(mean((Y2-YP').^2)));

@@ -1,9 +1,9 @@
 function [A, B] = covSEisoj(loghyper, x, z)
 
-% Squared Exponential covariance function with isotropic distance measure. The 
+% Squared Exponential covariance function with isotropic distance measure. The
 % covariance function is parameterized as:
 %
-% k(x^p,x^q) = sf2 * exp(-(x^p - x^q)'*inv(P)*(x^p - x^q)/2) 
+% k(x^p,x^q) = sf2 * exp(-(x^p - x^q)'*inv(P)*(x^p - x^q)/2)
 %
 % where the P matrix is ell^2 times the unit matrix and sf2 is the signal
 % variance. The hyperparameters are:
@@ -19,21 +19,21 @@ jitter = 1e-6;
 
 if nargin == 0, A = '2'; return; end              % report number of parameters
 
-[n D] = size(x);
+[n,D] = size(x); %#ok<NASGU>
 ell = exp(loghyper(1));                           % characteristic length scale
 sf2 = exp(2*loghyper(2));                                     % signal variance
 
 if nargin == 2
-  A = sf2*exp(-sq_dist(x'/ell)/2);
-  A = A+sf2*jitter*eye(n);                 
+    A = sf2*exp(-sq_dist(x'/ell)/2);
+    A = A+sf2*jitter*eye(n);
 elseif nargout == 2                              % compute test set covariances
-  A = sf2*(1+jitter)*ones(size(z,1),1);
-  B = sf2*exp(-sq_dist(x'/ell,z'/ell)/2);
+    A = sf2*(1+jitter)*ones(size(z,1),1);
+    B = sf2*exp(-sq_dist(x'/ell,z'/ell)/2);
 else                                                % compute derivative matrix
-  if z == 1                                                   % first parameter
-    A = sf2*exp(-sq_dist(x'/ell)/2).*sq_dist(x'/ell);  
-  else                                                       % second parameter
-    A = 2*sf2*(exp(-sq_dist(x'/ell)/2)+jitter*eye(n));
-  end
+    if z == 1                                                   % first parameter
+        A = sf2*exp(-sq_dist(x'/ell)/2).*sq_dist(x'/ell);
+    else                                                       % second parameter
+        A = 2*sf2*(exp(-sq_dist(x'/ell)/2)+jitter*eye(n));
+    end
 end
 
