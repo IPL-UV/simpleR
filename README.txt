@@ -1,7 +1,7 @@
 %
 % simpleR: SIMPLE REGRESSION DEMO.
-%        Version: 3.1
-%        Date   : 29-Ja6n-201
+%        Version: 3.1.1
+%        Date   : Apr 2018
 %
 %    This demo shows the training and testing of several state-of-the-art statistical models for regression.
 %
@@ -173,4 +173,3 @@
 % gustavo.camps@uv.es
 % http://isp.uv.es/
 % http://www.uv.es/gcamps
-%
