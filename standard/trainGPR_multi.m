@@ -1,6 +1,6 @@
 function model = trainGPR_multi(X1,Y1,gprFunc)
 
-% [Nsamples Nfeatures] = size(X1);
+% [Nsamples, Nfeatures] = size(X1);
 
 % Use our GPR multioutput function by default
 if ~exist('gprFunc', 'var')
@@ -37,8 +37,12 @@ NoisePower   = mean(SignalPower/10);
 % SignalPower  = 1;
 % NoisePower   = 0.2;
 
-theta = [ lengthscales ; 0.5*log(SignalPower) ; 0.5*log(NoisePower) ];
-[loghyper, fvals, iter] = minimize(theta, gprFunc, -200, K, X1, Y1);
+logtheta = [ lengthscales ; 0.5*log(SignalPower) ; 0.5*log(NoisePower) ];
+[loghyper, fvals, iter] = minimize(logtheta, gprFunc, -200, K, X1, Y1);
+
+Ktrain = feval(K{:}, loghyper, X1);  % compute training set covariance matrix
+L = chol(Ktrain)';                   % cholesky factorization of the covariance
+alpha = L'\(L\Y1);
 
 model.loghyper = loghyper;
 model.fvals = fvals;
@@ -46,3 +50,5 @@ model.iter = iter;
 model.K = K;
 model.Xtrain = X1;
 model.Ytrain = Y1;
+model.L = L;
+model.alpha = alpha;

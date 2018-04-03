@@ -22,7 +22,7 @@ for gg = 1:numel(gamma)
         for ee = 1:numel(eps)
             % params = sprintf('-s 3 -t 4 -c %f -p %f -v %d', C(cc), eps(ee), vf);
             params = sprintf('-s 3 -t 2 -g %f -c %f -p %f -v %d', gamma(gg), C(cc), eps(ee), vf);
-            mse = svmtrain(Y, X ,params);
+            mse = mysvmtrain(Y, X ,params);
             if mse < bestMse
                 bestMse = mse;
                 bestEps = ee;
@@ -36,7 +36,7 @@ end
 % K = kernelmatrix('rbf', X', X', sigma(bestGamma));
 % params = sprintf('-s 3 -t 4 -c %f -p %f', C(bestC), eps(bestEps));
 params = sprintf('-s 3 -t 2 -g %f -c %f -p %f', gamma(bestGamma), C(bestC), eps(bestEps));
-model = svmtrain(Y, X, params);
+model = mysvmtrain(Y, X, params);
 % model.sigma = sigma(bestGamma);
 % model.C = C(bestC);
 % model.Xtrain = X;

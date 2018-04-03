@@ -4,7 +4,7 @@ function Yp = testSVR(model,Xtest)
 % sigma  = model.sigma;
 
 % Kt = kernelmatrix('rbf', Xtest', Xtrain', sigma);
-Yp = svmpredict(zeros(size(Xtest,1),1), Xtest, model); % Kt, rmfield(model,{'Xtrain','sigma','C'}));
+Yp = mysvmpredict(zeros(size(Xtest,1),1), Xtest, model); % Kt, rmfield(model,{'Xtrain','sigma','C'}));
 
 % This is the code to obtain predictions directly in MATLAB without svmpredict.
 % However, in my speed tests I found svmpredict to be faster than this.

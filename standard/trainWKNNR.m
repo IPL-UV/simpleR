@@ -1,6 +1,6 @@
 function model = trainWKNNR(X,Y)
 
-[n d] = size(X);
+[n,d] = size(X);
 rate = 0.66;      % Use 2/3 - 1/3 for xvalidation
 ntrain = round(rate*n);
 r = randperm(n);
@@ -21,8 +21,7 @@ for k=K
 end
 % figure,plot(K,res,'ko-'), grid
 
-[val idx] = min(res);
+[val,idx] = min(res);
 model.k = idx;
 model.Xtrain = Xtrain; % should we save X? ;)
 model.Ytrain = Ytrain; % should we save Y? ;)
-

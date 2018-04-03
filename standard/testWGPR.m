@@ -1,7 +1,7 @@
 function Yp = testWGPR(model,Xtest)
 
 % set quantiles for predictive density
-alpha = [0.1:0.1:1-0.1];
+alpha = 0.1:0.1:0.9;
 
 % rescale targets
 tmax   = model.tmax; tmin = model.tmin;
@@ -14,4 +14,3 @@ Y      = (model.Ytrain-tmin)/(tmax-tmin) - 0.5;
 % rescale back
 Yp = (Yp + 0.5)*(tmax-tmin) + tmin;
 % Yp = real(Yp);
-

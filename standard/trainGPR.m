@@ -1,6 +1,6 @@
 function model = trainGPR(X1,Y1)
 
-[Nsamples Nfeatures] = size(X1);
+% [Nsamples, Nfeatures] = size(X1);
 
 % Define the kernel matrix structure:
 % We use a composite kernel accounting for different signal (spectra) and
@@ -32,7 +32,12 @@ NoisePower   = SignalPower/4;
 % SignalPower  = 1;
 % NoisePower   = 0.2;
 
-[loghyper fvals iter] = minimize([lengthscales; 0.5*log(SignalPower); 0.5*log(NoisePower)], 'gpr', -100, K, X1, Y1);
+logtheta = [ lengthscales ; 0.5*log(SignalPower) ; 0.5*log(NoisePower) ];
+[loghyper, fvals, iter] = minimize(logtheta, 'gpr', -100, K, X1, Y1);
+
+Ktrain = feval(K{:}, loghyper, X1);  % compute training set covariance matrix
+L = chol(Ktrain)';                   % cholesky factorization of the covariance
+alpha = L'\(L\Y1);
 
 model.loghyper = loghyper;
 model.fvals = fvals;
@@ -40,4 +45,5 @@ model.iter = iter;
 model.K = K;
 model.Xtrain = X1;
 model.Ytrain = Y1;
-
+model.L = L;
+model.alpha = alpha;
