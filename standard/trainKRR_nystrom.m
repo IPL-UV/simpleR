@@ -1,66 +1,74 @@
-function model = trainKRR_nystrom(X,Y,k)
+function model = trainKRR_nystrom(X,Y,k,rate)
 
 % Default rank
 if ~exist('k', 'var')
     k = 5000;
 end
 
+if ~exist('rate', 'var')
+    rate = 0.7;      % For xvalidation
+end
+
 n = size(X,1);
-rate = 0.66;      % Use 2/3 - 1/3 for xvalidation
 ntrain = round(rate*n);
+if k < ntrain
+    nk = 1:k;
+else
+    nk = 1:ntrain;
+end
+
 r = randperm(n);
-Xtrain = X(r(1:ntrain),:);
-Ytrain = Y(r(1:ntrain),:);
-Xtest = X(r(ntrain+1:end),:);
-Ytest = Y(r(ntrain+1:end),:);
+idxTrain = r(1:ntrain);
+idxTest = r(ntrain+1:end);
 
-% [samples outdim] = size(Ytrain);
-
-meanSigma = mean(pdist(X));
-sigmaMin = log10(meanSigma*0.1);
-sigmaMax = log10(meanSigma*10);
-sigma = logspace(sigmaMin,sigmaMax,20);
-gamma = logspace(-7,0,20);
+% meanSigma = mean(pdist(Xtrain(nk,:)));
+meanSigma = mean(pdist(X(idxTrain(nk),:)));
+sigmaMin = log10(meanSigma * 0.01);
+sigmaMax = log10(meanSigma * 10);
+sigma = logspace(sigmaMin, sigmaMax, 20);
+gamma = logspace(-7, 0, 20);
 
 rmse = Inf;
 for ls = 1:numel(sigma)
+    
+    Kt = kernelmatrix('rbf', X(idxTrain,:)', X(idxTrain(nk),:)', sigma(ls));
+    Kv = kernelmatrix('rbf', X(idxTest,:)', X(idxTrain(nk),:)', sigma(ls));
 
-    Kt = kernelmatrix('rbf', Xtrain', Xtrain', sigma(ls));
-    Kv = kernelmatrix('rbf', Xtest', Xtrain', sigma(ls));
-
-    if n <= k
-        warning('simpleR:warning', 'Number of samples (%d) is less than k (%d), using full kernel', n, k)
-    else
-        [U,D] = nys(Kt, k);
-        Kt = U * D * U';
-    end
-
+    KtT_Kt = Kt' * Kt;
+    KtT_Yt = Kt' * Y(idxTrain,:);
+    
     for lg = 1:numel(gamma)
 
         % Train
-        % 1/ Slow: compute the inverse of the regularized kernel matrix:
-        % alpha = inv(gamma(lg) * eye(size(yt,1)) + Kt) * yt;
+        % 1/ Slow and less accurate: compute the inverse of the regularized kernel matrix:
+        % alpha = inv(gamma(lg) * Kt(nk,:) + Kt' * Kt) * (Kt' * Ytrain);
+        
         % 2/ Faster: solve the linear problem:
-        % alpha = (gamma(lg) * eye(size(yt,1)) + Kt) \ yt;
+        % alpha = (gamma(lg) * Kt(nk,:) + Kt' * Kt) \ (Kt' * Ytrain);
+        
         % 3/ Even faster: Cholesky decomposition
-        R = chol(gamma(lg) * eye(size(Ytrain,1)) + Kt);
-        alpha = R\(R'\Ytrain);
+        % Sometimes this rises 'matrix must be positive definite'
+        [R,p] = chol(gamma(lg) * Kt(nk,:) + KtT_Kt);
+        if p == 0
+            alpha = R \ (R' \ KtT_Yt);
+        else
+            alpha = (gamma(lg) * Kt(nk,:) + KtT_Kt) \ KtT_Yt;
+        end
 
-        % Validate
+        % Evaluate
         yp = Kv * alpha;
-
-        % Error
-        res = mean(sqrt(mean((Ytest-yp).^2)));
-
+        res = mean(sqrt(mean((Y(idxTest,:) - yp).^2)));
         if res < rmse
             model.sigma = sigma(ls);
             model.gamma = gamma(lg);
+            model.alpha = alpha;
             rmse = res;
         end
+        
+        % model.res(ls,lg) = res;
+        % [ls/numel(sigma) lg/numel(gamma)]
     end
 end
 
 % Final model
-model.x = X;
-K = kernelmatrix('rbf', model.x', model.x', model.sigma);
-model.alpha = (model.gamma * eye(size(Y,1)) + K) \ Y;
+model.x = X(idxTrain(nk),:);
