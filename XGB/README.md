@@ -4,8 +4,8 @@ Check this for more info https://sites.google.com/site/carlosbecker/resources/gr
 
   - For Linux it should work without problems.
   - For Macs, you will need the gcc47 port, "sudo port install gcc47".
-  - There is no support for Windows yet. We didn't manage to compile the code,
-    either for Windows or Macs.
+  - We didn't try for Windows, but according to the author, it should work with Windows 7.
+  - We didn't manage to compile the code for Windows or Macs, and didn't try for Linux.
 
 Citations:
 
