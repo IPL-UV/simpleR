@@ -63,7 +63,7 @@ end
 
 % calculate minus log likelihood ...
 
-if dflag == 'default' | dflag == 'f'
+if strcmp(dflag, 'default') || strcmp(dflag, 'f')
   jacob = sum(log(w)); % jacobian term 
   fX = 0.5*logdetQ + 0.5*z'*invQz + 0.5*n*log(2*pi) - jacob + ...
        0.5*sum(((X-muX).^2)./sX);% + log(2*pi*sX));
@@ -73,7 +73,7 @@ end
 
 % ... and its partial derivatives
 
-if dflag == 'default' | dflag == 'g'
+if strcmp(dflag, 'default') || strcmp(dflag, 'g')
   dfX = zeros(D+2+3*num,1);  % set the size of the derivative vector
 
   for i = 1:num % derivatives wrt warping parameters

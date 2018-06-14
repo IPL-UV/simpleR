@@ -72,10 +72,10 @@ if length>0, S='Linesearch'; else S='Function evaluation'; end
 
 i = 0;                                            % zero the run length counter
 ls_failed = 0;                             % no previous line search has failed
-[f0 df0] = feval(f, X, varargin{:});          % get function value and gradient
+[f0, df0] = feval(f, X, varargin{:});          % get function value and gradient
 Z = X; X = unwrap(X); df0 = unwrap(df0);
 %fprintf('%s %6i;  Value %4.6e\r', S, i, f0);
-if exist('fflush','builtin') fflush(stdout); end
+if exist('fflush','builtin'), fflush(stdout); end
 fX = f0;
 i = i + (length<0);                                            % count epochs?!
 s = -df0; d0 = -s'*s;           % initial search direction (steepest) and slope
@@ -94,7 +94,7 @@ while i < abs(length)                                      % while not finished
             try
                 M = M - 1; i = i + (length<0);                         % count epochs?!
                 
-                [f3 df3] = feval(f, rewrap(Z,X+x3*s), varargin{:});
+                [f3, df3] = feval(f, rewrap(Z,X+x3*s), varargin{:});
                 df3 = unwrap(df3);
                 if isnan(f3) || isinf(f3) || any(isnan(df3)+isinf(df3)), error(''), end
                 success = 1;
@@ -138,7 +138,7 @@ while i < abs(length)                                      % while not finished
             x3 = (x2+x4)/2;               % if we had a numerical problem then bisect
         end
         x3 = max(min(x3, x4-INT*(x4-x2)),x2+INT*(x4-x2));  % don't accept too close
-        [f3 df3] = feval(f, rewrap(Z,X+x3*s), varargin{:});
+        [f3, df3] = feval(f, rewrap(Z,X+x3*s), varargin{:});
         df3 = unwrap(df3);
         if f3 < F0, X0 = X+x3*s; F0 = f3; dF0 = df3; end         % keep best values
         M = M - 1; i = i + (length<0);                             % count epochs?!
@@ -148,7 +148,7 @@ while i < abs(length)                                      % while not finished
     if abs(d3) < -SIG*d0 && f3 < f0+x3*RHO*d0          % if line search succeeded
         X = X+x3*s; f0 = f3; fX = [fX' f0]';                     % update variables
         %fprintf('%s %6i;  Value %4.6e\r', S, i, f0);
-        if exist('fflush','builtin') fflush(stdout); end
+        if exist('fflush','builtin'), fflush(stdout); end
         s = (df3'*df3-df0'*df3)/(df0'*df0)*s - df3;   % Polack-Ribiere CG direction
         df0 = df3;                                               % swap derivatives
         d3 = d0; d0 = df0'*s;
@@ -192,20 +192,20 @@ end                                                   % other types are ignored
 % be of any type. The number of numerical elements must match; on exit "v"
 % should be empty. Non-numerical entries are just copied. See also unwrap.m.
 
-function [s v] = rewrap(s, v)
+function [s, v] = rewrap(s, v)
 
 if isnumeric(s)
     if numel(v) < numel(s)
         error('The vector for conversion contains too few elements')
     end
-    s = reshape(v(1:numel(s)), size(s));            % numeric values are reshaped
+    s = reshape(v(1:numel(s)), size(s));          % numeric values are reshaped
     v = v(numel(s)+1:end);                        % remaining arguments passed on
 elseif isstruct(s)
-    [s p] = orderfields(s); p(p) = 1:numel(p);      % alphabetize, store ordering
-    [t v] = rewrap(struct2cell(s), v);                 % convert to cell, recurse
+    [s, p] = orderfields(s); p(p) = 1:numel(p);         % alphabetize, store ordering
+    [t, v] = rewrap(struct2cell(s), v);                 % convert to cell, recurse
     s = orderfields(cell2struct(t,fieldnames(s),1),p);  % conv to struct, reorder
 elseif iscell(s)
     for i = 1:numel(s)             % cell array elements are handled sequentially
-        [s{i} v] = rewrap(s{i}, v);
+        [s{i}, v] = rewrap(s{i}, v);
     end
 end                                             % other types are not processed

@@ -1,4 +1,4 @@
-function [quant,mea,dens]= gpw01pred(X,input,t,testin,alpha,testout)
+function [mea,quant,dens]= gpw01pred(X,input,t,testin,alpha,testout)
 
 % gpw01pred: Make predictions for the warped Gaussian process with
 % Gaussian covariance. Requires Carl Edward Rasmussen's gp01pred
@@ -16,7 +16,7 @@ function [quant,mea,dens]= gpw01pred(X,input,t,testin,alpha,testout)
 % 
 % quant:   (N x Na) matrix of locations of quantiles specified by alpha
 % mea:     (N x 1) means of predictive densities
-% dens:    (N x 1) negative log predictive densituies evaluated at
+% dens:    (N x 1) negative log predictive densities evaluated at
 %          test targets
 
 N = size(testin,1);
@@ -59,8 +59,7 @@ mea = mea*H'/sqrt(pi);
 
 
 % if test targets are supplied, compute neg. log predictive density
-
-if nargin > 5
+if nargin > 5 && nargout > 2
   w = ones(length(testout),1);
   for i = 1:num
     s{i} = eb(i)*(testout + c(i));
