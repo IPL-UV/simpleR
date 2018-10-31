@@ -19,25 +19,29 @@ gamma = logspace(-7,0,20);
 
 rmse = Inf;
 for ls = 1:numel(sigma)
-    
+
     Kt = kernelmatrix('rbf', Xtrain', Xtrain', sigma(ls));
     Kv = kernelmatrix('rbf', Xtest', Xtrain', sigma(ls));
-    
+
     for lg = 1:numel(gamma)
 
         % Train
         % 1/ Slow: compute the inverse of the regularized kernel matrix:
-        % alpha = inv(gamma(lg) * eye(size(yt,1)) + Kt) * yt;
+        % alpha = inv(Kt + gamma(lg) * eye(size(yt,1))) * yt;
         % 2/ Faster: solve the linear problem:
-        % alpha = (gamma(lg) * eye(size(yt,1)) + Kt) \ yt;
+        % alpha = (Kt + gamma(lg) * eye(size(yt,1))) \ yt;
         % 3/ Even faster: Cholesky decomposition
-        R = chol(gamma(lg) * eye(size(Ytrain,1)) + Kt);
-        alpha = R\(R'\Ytrain);
+        [R, p] = chol(Kt + gamma(lg) * eye(size(Ytrain,1)));
+        if p > 0
+            alpha = (Kt + gamma(lg) * eye(size(yt,1))) \ yt;
+        else
+            alpha = R\(R'\Ytrain);
+        end
 
         % Validate
         yp = Kv * alpha;
 
-        % Error        
+        % Error
         res = mean(sqrt(mean((Ytest-yp).^2)));
 
         if res < rmse
