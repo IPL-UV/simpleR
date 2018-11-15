@@ -19,11 +19,14 @@ function model = trainRF1(x,y)
 % for i = 1:numel(legs), legs{i} = num2str(legs{i}); end
 % legend(legs)
 
-% meanleaf: use '1' or '2'
+% meanleaf: use between 1 and 3
 
 meanleaf = 1;
-nvartosample = 'all'; % if not set, 1/3 of the variables for regression
-% nvartosample = size(x,2) -1; % any positive integer invokes Breiman's 'random forest' algorithm
+% nvartosample = 'all'; % if not set, 1/3 of the variables for regression
+nvartosample = ceil(size(x,2) / 3); % default original RF setting
+% nvartosample = size(x,2) - 1; % any positive integer invokes Breiman's 'random forest' algorithm
+% As in canonical correlation forests
+% nvartosample = ceil(log2(size(x,2)) + 1);
 
 %% Estimating feature importance
 % b = TreeBagger(100, x, y, 'method', 'r', 'oobvarimp', 'on', 'minleaf', 1);
@@ -34,7 +37,7 @@ nvartosample = 'all'; % if not set, 1/3 of the variables for regression
 model = cell(1,size(y,2));
 for i = 1:length(model)
 %    fprintf('  RF on output var %d\n', i);
-    model{i} = TreeBagger(200, x, y(:,i), 'method', 'r', ...
+    model{i} = TreeBagger(500, x, y(:,i), 'method', 'r', ...
         'oobvarimp', 'on', 'minleaf', meanleaf, 'nvartosample', nvartosample);
 end
 

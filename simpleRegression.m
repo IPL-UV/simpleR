@@ -1,22 +1,22 @@
 %
 % "simpleR: A simple educational Matlab toolbox for statistical regression"
 %
-% [simpleR 3.0] 
-%        Version: 3.0
-%        Date   : 15-May-2016
+% [simpleR 3.0]
+%        Version: 3.1
+%        Date   : 15-Nov-2018
 %
-% This demo shows the training and testing of several state-of-the-art 
-% statistical models for regression. Please read the README file for more 
-% details. 
-% 
+% This demo shows the training and testing of several state-of-the-art
+% statistical models for regression. Please read the README file for more
+% details.
+%
 % If you find this toolbox useful, cite it!
 %
 % @misc{simpler,
 %  author = {Camps-Valls, G. and G\'omez-Chova, L. and Mu{\~n}oz-Mar\'i, J. and L\'azaro-Gredilla, M. and Verrelst, J.},
 %  title = {{simpleR}: A simple educational Matlab toolbox for statistical regression},
-%  month = {3},
-%  year = {2016},
-%  note = {V3.0},
+%  month = {11},
+%  year = {2018},
+%  note = {V3.1},
 %  url = {http://www.uv.es/gcamps/},
 % }
 %
@@ -25,7 +25,7 @@
 % ------------------------------
 %
 % LINEAR MODELS
-%    * Regularized Least squares Linear regression (RLR) 
+%    * Regularized Least squares Linear regression (RLR)
 %    * Least Absolute Shrinkage and Selection Operator (LASSO).
 %    * Elastic Net (ELASTICNET).
 %
@@ -82,8 +82,8 @@ set(0,'DefaultAxesFontName',fontname,'DefaultAxesFontSize',fontsize,'DefaultAxes
 % Paths
 addpath('./AUXF')       % Auxiliary functions for visualization, results analysis, plots, etc.
 addpath('./DATA')       % Put your data here
-addpath('./FIGURES')    % All figures are saved here
-addpath('./RESULTS')    % All files with results are saved here
+% addpath('./FIGURES')    % All figures are saved here
+% addpath('./RESULTS')    % All files with results are saved here
 
 % Paths for the methods
 addpath('./standard')   % Train-Test functions for all methods
@@ -95,16 +95,18 @@ addpath('./LWP')        % Locally-Weighted Polynomials, Version 1.3, by Gints Je
 addpath('./WGP')        % Warped GPs
 addpath('./SSGP')       % Sparse Spectrum Gaussian Process (SSGP)  [Lázaro-Gredilla, 2008]
 addpath('./TGP')        % Twin Gaussian Process (TGP) [Liefeng Bo and Cristian Sminchisescu]  http://www.maths.lth.se/matematiklth/personal/sminchis/code/TGP.html
+addpath('./XGB')        % Extreme Gradient Boosting Trees
+addpath(genpath('./CCFS/src')); % Canonical Correlation Forests
 
-%% Load data: 
+%% Load data:
 %   X: Input data of size n x d
 %   Y: Output/target/observation of size n x do
 %   n: number of samples/examples/patterns (in rows)
 %   d: input data dimensionality/features (in columns)
-%   do: output data dimensionality (variables, observations). 
+%   do: output data dimensionality (variables, observations).
 % load SeaBAM.mat
 
-X = [sin(1:100)', randn(100,1), rand(100,1)]; 
+X = [sin(1:100)', randn(100,1), rand(100,1)];
 Y = sin(1:100)' + 0.1*randn(100,1);
 
 %% Split training-testing data
@@ -189,6 +191,3 @@ end
 %     results2(m)     = assessment(Ypred(:,m),Ytest,'regress');
 %     CPUTIMES2(m) = cputime-t;
 % end
-
-%% Save results
-save('RESULTS/results.mat','RESULTS','CPUTIMES','MODELS','METHODS','VARIABLES','X','Y','Xtrain','Ytrain','Xtest','Ytest','YPREDS')
