@@ -130,10 +130,13 @@ switch lower(par)
             [rr, pp]   = corr(Labels, PreLabels);
             RESULTS.R  = rr;
             RESULTS.RP = pp;
+            % Coefficient of determination
+            SStot = sum((Labels - mean(Labels)).^2);
+            SSres = sum((Labels - PreLabels).^2);
+            RESULTS.R2 = 1 - SSres/SStot;
         end
 
     otherwise
         disp('Unknown learning paradigm.')
 
 end
-
