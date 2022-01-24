@@ -1,31 +1,37 @@
-function model = trainRLR(X,Y)
+function model = trainRLR(X,Y,max_gamma)
 
-[n d] = size(X);
-rate = 0.66; 
-ntrain = round(rate*n);
-r = randperm(n);
+[n,d] = size(X);
 X = [ones(n,1) X];
-d = d + 1;
-Xtrain = X(r(1:ntrain),:);
-Ytrain = Y(r(1:ntrain),:);
-Xtest  = X(r(ntrain+1:end),:);
-Ytest  = Y(r(ntrain+1:end),:);
+cv = cvpartition(n, 'KFold', 4);
 
-gamma = logspace(-10,10,50);
+Ctrain = X' * X;
+if ~exist('max_gamma', 'var')
+    max_gamma = floor(log10(max(Ctrain(:))));
+else
+    max_gamma = log10(max_gamma);
+end
+gamma = logspace(-10,max_gamma,50);
 
-Ctrain = Xtrain' * Xtrain;
-
-res = Inf;
-for lg = 1:numel(gamma)
-    W = (Ctrain + gamma(lg)*eye(d)) \ (Xtrain'*Ytrain);
-    Ypred = Xtest * W;
-    res(lg) = mean(sqrt(mean((Ytest-Ypred).^2)));
+cvgamma = zeros(1,cv.NumTestSets);
+for k = 1:cv.NumTestSets
+    idxtrn = training(cv,k);
+    Xtrain = X(idxtrn,:);
+    Ytrain = Y(idxtrn,:);
+    idxtst = test(cv,k);
+    Xtest = X(idxtst,:);
+    Ytest = Y(idxtst,:);    
+    res = nan(1,numel(gamma));
+    for lg = 1:numel(gamma)
+        W = (Xtrain'*Xtrain + gamma(lg)*eye(d)) \ (Xtrain'*Ytrain);
+        Ypred = Xtest * W;
+        res(lg) = mean(sqrt(mean((Ytest-Ypred).^2)));
+    end
+    [~, idx] = nanmin(res);
+    cvgamma(k) = gamma(idx);
 end
 % figure,semilogx(gamma,res,'ko-'), grid
 
-[~, idx] = min(res);
-bestgamma = gamma(idx);
+bestgamma = median(cvgamma);
 W = (X'*X + bestgamma*eye(d)) \ (X'*Y);
 model.W = W;
 model.gamma = bestgamma;
-
