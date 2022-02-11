@@ -115,7 +115,7 @@ switch lower(par)
 
         RESULTS.ME   = mean(Labels-PreLabels);
         RESULTS.RMSE = sqrt(mean((Labels-PreLabels).^2));
-        RESULTS.RELRMSE = RESULTS.RMSE/mean(PreLabels);
+        RESULTS.RELRMSE = RESULTS.RMSE/mean(Labels);
         RESULTS.MAE  = mean(abs(Labels-PreLabels));
         if length(Labels) == 1
             % Correlation coefficient does not make sense for one point
